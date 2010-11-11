@@ -15,13 +15,14 @@
   )
   
   (- (id) requirement:(id)description block:(id)block is
-    (puts description)
+    (print "- #{description}")
     (try
       (eval block)
       (catch (e)
-        (puts (e reason))
+        (print " [Failed: #{(e reason)}]")
       )
     )
+    (print "\n")
   )
 )
 
@@ -72,11 +73,11 @@
 (describe "An instance of Should" `(
   (it "raises an exception if the assertion fails" (do ()
     (set x ((Should alloc) initWithObject:"foo"))
-    (puts (x equal:"bar"))
+    (x equal:"bar")
   ))
   
   (it "compares for equality" (do ()
     (set x ((Should alloc) initWithObject:"foo"))
-    (puts (x equal:"foo"))
+    (x equal:"foo")
   ))
 ))
