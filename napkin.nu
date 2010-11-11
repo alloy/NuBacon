@@ -33,9 +33,16 @@
 ; (puts (x equal:"foo"))
 ; (puts (x == "foo"))
 
-(set context ((Context alloc) initWithName:"An instance of Should" block:(do (*args)
+; (set context ((Context alloc) initWithName:"An instance of Should" block:(do (*args)
+;   (set x ((Should alloc) initWithObject:"foo"))
+;   (puts (x equal:"foo"))
+; )))
+; (context run)
+
+; TODO should probably become a macro
+(function describe (name block) (((Context alloc) initWithName:name block:block) run))
+
+(describe "An instance of Should" (do (*args)
   (set x ((Should alloc) initWithObject:"foo"))
   (puts (x equal:"foo"))
-)))
-
-(context run)
+))
