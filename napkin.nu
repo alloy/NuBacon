@@ -10,9 +10,11 @@
   
   (- run is
     (puts @name)
-    (@block call))
+    (@block each: (do (x) (eval x))))
   
-  (- it)
+  (- requirement:(id)description block:(id)block is
+    (puts description)
+    (block call))
 )
 
 (class Should is NSObject
@@ -53,9 +55,16 @@
 ; ))
 
 ;; STEP 4
-(describe "An instance of Should" (do ()
-  (it "compare for equality" (do ()
+(macro-0 it
+  (set __description (eval (car margs)))
+  (set __block (eval (cdr margs)))
+  (self requirement:__description block:__block)
+)
+
+(describe "An instance of Should" `(
+  (it "compares for equality" (do (*args)
     (set x ((Should alloc) initWithObject:"foo"))
     (puts (x equal:"foo"))
+    (puts (self description))
   ))
 ))
