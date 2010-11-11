@@ -19,7 +19,10 @@
     (try
       (eval block)
       (catch (e)
-        (print " [Failed: #{(e reason)}]")
+        (if (eq (e class) BaconError)
+          (then (print " [Failed: #{(e reason)}]")) ; TODO this must be reported on exit
+          (else (print " [Failed]"))
+        )
       )
     )
     (print "\n")
@@ -79,6 +82,10 @@
   (it "does not raise an exception if the assertion passes" (do ()
     (set x ((Should alloc) initWithObject:"foo"))
     (x equal:"foo")
+  ))
+  
+  (it "catches any type of exception" (do ()
+    (throw "ohnoes")
   ))
   
   (it "compares for equality" (do ()
