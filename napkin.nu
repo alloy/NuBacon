@@ -33,28 +33,9 @@
   ;   (eq @object value))
 )
 
-;; STEP 1
-; (set x ((Should alloc) initWithObject:"foo"))
-; (puts (x equal:"foo"))
-; (puts (x == "foo"))
-
-;; STEP 2
-; (set context ((Context alloc) initWithName:"An instance of Should" block:(do (*args)
-;   (set x ((Should alloc) initWithObject:"foo"))
-;   (puts (x equal:"foo"))
-; )))
-; (context run)
-
-;; STEP 3
-; TODO should probably become a macro
+; TODO does a macro have an advantage here?
 (function describe (name block) (((Context alloc) initWithName:name block:block) run))
 
-; (describe "An instance of Should" (do (*args)
-;   (set x ((Should alloc) initWithObject:"foo"))
-;   (puts (x equal:"foo"))
-; ))
-
-;; STEP 4
 (macro-0 it
   (set __description (eval (car margs)))
   (set __block (eval (cdr margs)))
@@ -62,9 +43,8 @@
 )
 
 (describe "An instance of Should" `(
-  (it "compares for equality" (do (*args)
+  (it "compares for equality" (do ()
     (set x ((Should alloc) initWithObject:"foo"))
     (puts (x equal:"foo"))
-    (puts (self description))
   ))
 ))
