@@ -11,6 +11,8 @@
   (- run is
     (puts @name)
     (@block call))
+  
+  (- it)
 )
 
 (class Should is NSObject
@@ -29,20 +31,31 @@
   ;   (eq @object value))
 )
 
+;; STEP 1
 ; (set x ((Should alloc) initWithObject:"foo"))
 ; (puts (x equal:"foo"))
 ; (puts (x == "foo"))
 
+;; STEP 2
 ; (set context ((Context alloc) initWithName:"An instance of Should" block:(do (*args)
 ;   (set x ((Should alloc) initWithObject:"foo"))
 ;   (puts (x equal:"foo"))
 ; )))
 ; (context run)
 
+;; STEP 3
 ; TODO should probably become a macro
 (function describe (name block) (((Context alloc) initWithName:name block:block) run))
 
-(describe "An instance of Should" (do (*args)
-  (set x ((Should alloc) initWithObject:"foo"))
-  (puts (x equal:"foo"))
+; (describe "An instance of Should" (do (*args)
+;   (set x ((Should alloc) initWithObject:"foo"))
+;   (puts (x equal:"foo"))
+; ))
+
+;; STEP 4
+(describe "An instance of Should" (do ()
+  (it "compare for equality" (do ()
+    (set x ((Should alloc) initWithObject:"foo"))
+    (puts (x equal:"foo"))
+  ))
 ))
