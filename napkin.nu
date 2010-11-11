@@ -6,15 +6,32 @@
     (self init)
     (set @name name)
     (set @requirements requirements)
-    self)
+    self
+  )
   
-  (- run is
+  (- (id) run is
     (puts @name)
-    (@requirements each: (do (x) (eval x))))
+    (@requirements each: (do (x) (eval x)))
+  )
   
-  (- requirement:(id)description block:(id)block is
+  (- (id) requirement:(id)description block:(id)block is
     (puts description)
-    (block call))
+    (block call)
+  )
+)
+
+; TODO How should I subclass NSException?
+(class BaconError is NSObject
+  (ivar (id) description)
+  
+  (- (id) initWithDescription:(id)description is
+    (self init)
+    (set @description description)
+    self
+  )
+  
+  (- (id) name is "BaconError")
+  (- (id) reason is @description)
 )
 
 (class Should is NSObject
@@ -24,10 +41,15 @@
     (self init) ;; TODO check if it's nil
     ;; (puts (object description))
     (set @object object)
-    self)
+    self
+  )
   
   (- (id) equal:(id)value is
-    (eq @object value))
+    (unless (eq @object value)
+      (set d "`#{@object}' does not equal `#{value}'")
+      (throw ((BaconError alloc) initWithDescription:d))
+    )
+  )
   
   ; (- (id) ==:(id)value is
   ;   (eq @object value))
@@ -43,6 +65,11 @@
 )
 
 (describe "An instance of Should" `(
+  (it "raises an exception if the assertion fails" (do ()
+    (set x ((Should alloc) initWithObject:"foo"))
+    (puts (x equal:"bar"))
+  ))
+  
   (it "compares for equality" (do ()
     (set x ((Should alloc) initWithObject:"foo"))
     (puts (x equal:"foo"))
