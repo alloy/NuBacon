@@ -64,6 +64,10 @@
   ;   (eq @object value))
 )
 
+(class NSObject
+  (- (id) should is ((Should alloc) initWithObject:self))
+)
+
 ; TODO does a macro have an advantage here?
 (function describe (name requirements) (((Context alloc) initWithName:name requirements:requirements) run))
 
@@ -86,6 +90,10 @@
   
   (it "catches any type of exception" (do ()
     (throw "ohnoes")
+  ))
+  
+  (it "extends NSObject to return a Should instance, wrapping that object" (do ()
+    (("foo" should) equal:"foo")
   ))
   
   (it "compares for equality" (do ()
