@@ -76,6 +76,11 @@
     (x equal:"bar")
   ))
   
+  (it "does not raise an exception if the assertion passes" (do ()
+    (set x ((Should alloc) initWithObject:"foo"))
+    (x equal:"foo")
+  ))
+  
   (it "compares for equality" (do ()
     (set x ((Should alloc) initWithObject:"foo"))
     (x equal:"foo")
