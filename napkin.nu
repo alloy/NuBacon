@@ -1,16 +1,16 @@
 (class Context is NSObject
   (ivar (id) name
-        (id) block)
+        (id) requirements)
   
-  (- (id) initWithName:(id)name block:(id)block is
+  (- (id) initWithName:(id)name requirements:(id)requirements is
     (self init)
     (set @name name)
-    (set @block block)
+    (set @requirements requirements)
     self)
   
   (- run is
     (puts @name)
-    (@block each: (do (x) (eval x))))
+    (@requirements each: (do (x) (eval x))))
   
   (- requirement:(id)description block:(id)block is
     (puts description)
@@ -34,7 +34,7 @@
 )
 
 ; TODO does a macro have an advantage here?
-(function describe (name block) (((Context alloc) initWithName:name block:block) run))
+(function describe (name requirements) (((Context alloc) initWithName:name requirements:requirements) run))
 
 (macro-0 it
   (set __description (eval (car margs)))
