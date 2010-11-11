@@ -16,7 +16,12 @@
   
   (- (id) requirement:(id)description block:(id)block is
     (puts description)
-    (block call)
+    (try
+      (eval block)
+      (catch (e)
+        (puts (e reason))
+      )
+    )
   )
 )
 
@@ -59,8 +64,8 @@
 (function describe (name requirements) (((Context alloc) initWithName:name requirements:requirements) run))
 
 (macro-0 it
-  (set __description (eval (car margs)))
-  (set __block (eval (cdr margs)))
+  (set __description (car margs))
+  (set __block (cdr margs))
   (self requirement:__description block:__block)
 )
 
