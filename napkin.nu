@@ -22,8 +22,8 @@
       (catch (e)
         (if (eq (e class) BaconError)
           (then (print " [Failed: #{(e reason)}]")) ; TODO this must be reported on exit
-          ;(else (print " [Failed: #{(e reason)}]"))
-          (else (print " [Failed]"))
+          (else (print " [Failed: #{(e reason)}]"))
+          ;(else (print " [Failed]"))
         )
       )
     )
@@ -124,29 +124,30 @@
 )
 
 ; Hooray for meta-testing.
-; (function succeed
-;   (do (block)
-;     (((`(eval block) should) not) raise:"BaconError")
-;     t
-;   )
-; )
-; 
-; (function fail ()
-;   (do (block)
-;     ((`(eval block) should) raise:"BaconError")
-;     t
-;   )
-; )
+(set succeed
+  (do (block)
+    (((block should) not) raise:"BaconError")
+    t
+  )
+)
+
+(set fail
+  (do (block)
+    ((block should) raise:"BaconError")
+    t
+  )
+)
+
+(set equalFoo (do (x) (eq x "foo")))
+(set equalBar (do (x) (eq x "bar")))
 
 (describe "An instance of Should" `(
   (it "raises a BaconError if the assertion fails" (do ()
-    (set block `((((Should alloc) initWithObject:"foo") equal:"bar")))
-    ((block should) raise:"BaconError")
+    (`(("foo" should) equal:"bar") should:fail)
   ))
   
   (it "does not raise an exception if the assertion passes" (do ()
-    (set block `((((Should alloc) initWithObject:"foo") equal:"foo")))
-    (((block should) not) raise:"BaconError")
+    (`(("foo" should) equal:"foo") should:succeed)
   ))
   
   ; (it "catches any type of exception" (do ()
@@ -154,17 +155,10 @@
   ; ))
   
   (it "checks if the given block satisfies" (do ()
-    ; should pass
-    (("foo" should) satisfy:"pass" block:(do (x) (eq x "foo")))
-    ; should fail
-    (set block `(("foo" should) satisfy:"fail" block:(do (x) (eq x "bar"))))
-    ((block should) raise:"BaconError")
-    
-    ; should pass
-    ((("foo" should) not) satisfy:"pass" block:(do (x) (eq x "bar")))
-    ; should fail
-    (set block `((("foo" should) not) satisfy:"fail" block:(do (x) (eq x "foo"))))
-    ((block should) raise:"BaconError")
+    (`(("foo" should) satisfy:"pass" block:equalFoo) should:succeed)
+    (`(("foo" should) satisfy:"fail" block:equalBar) should:fail)
+    (`((("foo" should) not) satisfy:"pass" block:equalBar) should:succeed)
+    (`((("foo" should) not) satisfy:"fail" block:equalFoo) should:fail)
   ))
   
   (it "negates an assertion" (do ()
