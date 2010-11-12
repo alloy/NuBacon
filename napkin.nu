@@ -1,4 +1,4 @@
-(class BaconCounter is NSObject
+(class BaconSummary is NSObject
   (ivar (id) counters
         (id) errorLog
   )
@@ -42,17 +42,22 @@
     (@counters setValue:(+ (self errors) 1) forKey:"errors")
   )
   
-  (- (id) addToErrorLog:(id)message is
-    (@errorLog appendString:message)
+  (- (id) addToErrorLog:(id)e context:(id)name specification:(id)description type:(id)type is
+    (@errorLog appendString:"#{name} - #{description}: ")
+    (if (e respondsToSelector:"reason")
+      (then (@errorLog appendString:(e reason)))
+      (else (@errorLog appendString:(e description)))
+    )
+    (@errorLog appendString:"#{type}\n")
   )
   
-  (- (id) printSummary is
+  (- (id) print is
     (puts @errorLog)
     (puts "#{(self specifications)} specifications (#{(self requirements)} requirements), #{(self failures)} failures, #{(self errors)} errors")
   )
 )
 
-(set $BaconCounter ((BaconCounter alloc) init))
+(set $BaconSummary ((BaconSummary alloc) init))
 
 (class Context is NSObject
   (ivar (id) name
@@ -72,29 +77,23 @@
   )
   
   (- (id) requirement:(id)description block:(id)block is
-    ($BaconCounter addSpecification)
+    ($BaconSummary addSpecification)
     (print "- #{description}")
     (try
       (eval block)
       (catch (e)
-        (set message "#{@name} - #{description}: ")
-        (if (e respondsToSelector:"reason")
-          (then (message appendString:(e reason)))
-          (else (message appendString:(e description)))
-        )
         (if (eq (e class) BaconError)
           (then
-            ($BaconCounter addFailure)
+            ($BaconSummary addFailure)
             (set type " [FAILURE]")
           )
           (else
-            ($BaconCounter addError)
+            ($BaconSummary addError)
             (set type " [ERROR]")
           )
         )
         (print type)
-        (message appendString:type)
-        ($BaconCounter addToErrorLog:"#{message}\n")
+        ($BaconSummary addToErrorLog:e context:@name specification:description type:type)
       )
     )
     (print "\n")
@@ -149,7 +148,7 @@
   )
   
   (- (id) satisfy:(id)description block:(id)block is
-    ($BaconCounter addRequirement)
+    ($BaconSummary addRequirement)
     (if (@negated)
       (then (set d "expected `#{@object}' to not #{description}"))
       (else (set d "expected `#{@object}' to #{description}"))
@@ -291,4 +290,4 @@
   ))
 ))
 
-($BaconCounter printSummary)
+($BaconSummary print)
