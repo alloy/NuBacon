@@ -62,6 +62,20 @@
   
   ; (- (id) ==:(id)value is
   ;   (eq @object value))
+  
+  (- (id) raise:(id)exceptionName is
+    (try
+      (eval @object)
+      (catch (e)
+        (unless (eq (e name) exceptionName)
+          (then
+            (set d "expected to raise an exception of type `#{exceptionName}', but was a `#{(e name)}'")
+            (throw ((BaconError alloc) initWithDescription:d))
+          )
+        )
+      )
+    )
+  )
 )
 
 (class NSObject
@@ -99,5 +113,9 @@
   (it "compares for equality" (do ()
     (set x ((Should alloc) initWithObject:"foo"))
     (x equal:"foo")
+  ))
+  
+  (it "checks if a specified exception is raised" (do ()
+    ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
   ))
 ))
