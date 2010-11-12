@@ -90,22 +90,6 @@
     )
   )
   
-  (- (id) evaluateBlock:(id)block is
-    (unless (block @object)
-      (then
-        (set d "block returned a falsy value")
-        (throw ((BaconError alloc) initWithDescription:d))
-      )
-    )
-  )
-  
-  ; (- (id) equal:(id)value is
-  ;   (unless (eq @object value)
-  ;     (set d "`#{@object}' does not equal `#{value}'")
-  ;     (throw ((BaconError alloc) initWithDescription:d))
-  ;   )
-  ; )
-  
   (- (id) equal:(id)value is
     (self satisfy:"equal `#{value}'" block:(do (object)
       (eq object value)
@@ -151,12 +135,12 @@
   ;   (set x ((Should alloc) initWithObject:"foo"))
   ;   (x equal:"bar")
   ; ))
-  ; 
-  ; (it "does not raise an exception if the assertion passes" (do ()
-  ;   (set x ((Should alloc) initWithObject:"foo"))
-  ;   (x equal:"foo")
-  ; ))
-  ; 
+  
+  (it "does not raise an exception if the assertion passes" (do ()
+    (set x ((Should alloc) initWithObject:"foo"))
+    (x equal:"foo")
+  ))
+  
   ; (it "catches any type of exception" (do ()
   ;   (throw "ohnoes")
   ; ))
@@ -168,13 +152,13 @@
     ;((("foo" should) not) satisfy:(do (x) (eq x "foo"))) ; should fail
   ))
   
-  ; (it "negates an assertion" (do ()
-  ;   ((("foo" should) not) equal:"bar")
-  ; ))
+  (it "negates an assertion" (do ()
+    ((("foo" should) not) equal:"bar")
+  ))
   
-  ; (it "extends NSObject to return a Should instance, wrapping that object" (do ()
-  ;   (("foo" should) equal:"foo")
-  ; ))
+  (it "extends NSObject to return a Should instance, wrapping that object" (do ()
+    (("foo" should) equal:"foo")
+  ))
   
   (it "takes a block that's to be called with the `object', the return value indicates success or failure" (do ()
     ("foo" should:(do (string) (eq string "foo")))
