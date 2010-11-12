@@ -45,13 +45,41 @@
 )
 
 (class Should is NSObject
-  (ivar (id) object)
+  (ivar (id) object
+        (id) negated
+  )
   
   (- (id) initWithObject:(id)object is
     (self init) ;; TODO check if it's nil
     ;; (puts (object description))
     (set @object object)
+    (set @negated nil)
     self
+  )
+  
+  (- (id) not is
+    (puts "called not!")
+    (set @negated t)
+    self
+  )
+  
+  (- (id) satisfy:(id)block is
+    (set result (block @object))
+    (puts "result is: #{result}")
+    (if (result)
+      (then
+        (if (@negated)
+          (set d "not satisfied")
+          (throw ((BaconError alloc) initWithDescription:d))
+        )
+      )
+      (else
+        (unless (@negated)
+          (set d "not satisfied")
+          (throw ((BaconError alloc) initWithDescription:d))
+        )
+      )
+    )
   )
   
   (- (id) evaluateBlock:(id)block is
@@ -111,35 +139,45 @@
 )
 
 (describe "An instance of Should" `(
-  (it "raises an exception if the assertion fails" (do ()
-    (set x ((Should alloc) initWithObject:"foo"))
-    (x equal:"bar")
+  ; (it "raises an exception if the assertion fails" (do ()
+  ;   (set x ((Should alloc) initWithObject:"foo"))
+  ;   (x equal:"bar")
+  ; ))
+  ; 
+  ; (it "does not raise an exception if the assertion passes" (do ()
+  ;   (set x ((Should alloc) initWithObject:"foo"))
+  ;   (x equal:"foo")
+  ; ))
+  ; 
+  ; (it "catches any type of exception" (do ()
+  ;   (throw "ohnoes")
+  ; ))
+  
+  (it "checks if the given block satisfies" (do ()
+    (("foo" should) satisfy:(do (x) (eq x "foo"))) ; should pass
+    ;(("foo" should) satisfy:(do (x) (eq x "bar"))) ; should fail
+    ((("foo" should) not) satisfy:(do (x) (eq x "bar"))) ; should pass
+    ;((("foo" should) not) satisfy:(do (x) (eq x "foo"))) ; should fail
   ))
   
-  (it "does not raise an exception if the assertion passes" (do ()
-    (set x ((Should alloc) initWithObject:"foo"))
-    (x equal:"foo")
-  ))
+  ; (it "negates an assertion" (do ()
+  ;   ((("foo" should) not) equal:"foo")
+  ; ))
   
-  (it "catches any type of exception" (do ()
-    (throw "ohnoes")
-  ))
-  
-  (it "extends NSObject to return a Should instance, wrapping that object" (do ()
-    (("foo" should) equal:"foo")
-  ))
-  
-  (it "takes a list that's to be evaled, the return value indicates success or failure" (do ()
-    ("foo" should:(do (string) (eq string "foo")))
-    ;("foo" should:(do (string) (eq string "bar")))
-  ))
-  
-  (it "compares for equality" (do ()
-    (set x ((Should alloc) initWithObject:"foo"))
-    (x equal:"foo")
-  ))
-  
-  (it "checks if a specified exception is raised" (do ()
-    ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
-  ))
+  ; (it "extends NSObject to return a Should instance, wrapping that object" (do ()
+  ;   (("foo" should) equal:"foo")
+  ; ))
+  ; 
+  ; (it "takes a list that's to be evaled, the return value indicates success or failure" (do ()
+  ;   ("foo" should:(do (string) (eq string "foo")))
+  ;   ;("foo" should:(do (string) (eq string "bar")))
+  ; ))
+  ; 
+  ; (it "checks for equality" (do ()
+  ;   (("foo" should) equal:"foo")
+  ; ))
+  ; 
+  ; (it "checks if a specified exception is raised" (do ()
+  ;   ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
+  ; ))
 ))
