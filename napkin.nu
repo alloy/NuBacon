@@ -70,6 +70,14 @@
     (self satisfy:"satisfy the given block" block:block)
   )
   
+  (- (id) be is
+    self
+  )
+  
+  (- (id) be:(id)value is
+    (self equal:value)
+  )
+  
   (- (id) satisfy:(id)description block:(id)block is
     (if (@negated)
       (then (set d "expected `#{@object}' to not #{description}"))
@@ -141,9 +149,10 @@
   )
 )
 
+; Just some test constants
 (set equalFoo (do (x) (eq x "foo")))
 (set equalBar (do (x) (eq x "bar")))
-
+(set aRequirement ("foo" should))
 (set rangeException `((NSArray array) objectAtIndex:0))
 
 (describe "An instance of Should" `(
@@ -168,6 +177,17 @@
   
   (it "negates an assertion" (do ()
     ((("foo" should) not) equal:"bar")
+  ))
+  
+  ; TODO probably does change the description of the requirement
+  (it "has a `be' syntactic sugar method which does nothing but return the Should instance" (do ()
+    (((aRequirement be) should) equal:aRequirement)
+  ))
+  
+  ; TODO probably does change the description of the requirement
+  (it "has a `be:' syntactic sugar method which checks for equality" (do ()
+    (`(aRequirement be:"foo") should:succeed)
+    (`(aRequirement be:"bar") should:fail)
   ))
   
   (it "checks for equality" (do ()
