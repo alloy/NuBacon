@@ -127,7 +127,6 @@
   ))
   
   (after "each" (do ()
-    (puts "hier!")
     ((@a should) equal:3)
   ))
   

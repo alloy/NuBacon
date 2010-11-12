@@ -94,39 +94,45 @@
   (- (id) requirement:(id)description block:(id)block is
     ($BaconSummary addSpecification)
     (print "- #{description}")
-    (set rescued nil)
-    ; perform the before filters and the requirement
+    
     (try
-      (@before each: (do (x) (eval x)))
-      (eval block)
-      (catch (e)
+      (try ; wrap before/requirement/after
+        (@before each: (do (x) (eval x)))
+        (eval block)
+        (catch (e)
+          ; don't allow after filters to throw, as it could result in an endless loop
+          (self runAfterFilterAndThrow:nil)
+          (throw e)
+        )
+        ; ensure the after filters are always run, these however may throw, as we already ran the requirement
+        (self runAfterFilterAndThrow:t)
+      )
+      (catch (e) ; now really handle the bubbled exception
         (if (eq (e class) BaconError)
           (then
             ($BaconSummary addFailure)
-            (set rescued " [FAILURE]")
+            (set type " [FAILURE]")
           )
           (else
             ($BaconSummary addError)
-            (set rescued " [ERROR]")
+            (set type " [ERROR]")
           )
         )
+        (print type)
+        ($BaconSummary addToErrorLog:e context:@name specification:description type:type)
       )
     )
-    ; perform the after filters and only let the exception bubble through if there was no failure yet
+    
+    (print "\n")
+  )
+  
+  (- (id) runAfterFilterAndThrow:(id)shouldThrow is
     (try
       (@after each: (do (x) (eval x)))
       (catch (e)
-        (unless (rescued) (throw e))
+        (if (shouldThrow) (throw e))
       )
     )
-    ; in case there has been a failure, report it
-    (if (rescued)
-      (then
-        (print rescued)
-        ($BaconSummary addToErrorLog:e context:@name specification:description type:rescued)
-      )
-    )
-    (print "\n")
   )
 )
 
