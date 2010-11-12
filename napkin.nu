@@ -123,22 +123,29 @@
 )
 
 ; Hooray for meta-testing.
-(function fail ()
-  (do (block)
-    ((`(eval block) should) raise:"BaconError")
-    t
-  )
-)
+; (function succeed
+;   (do (block)
+;     (((`(eval block) should) not) raise:"BaconError")
+;     t
+;   )
+; )
+; 
+; (function fail ()
+;   (do (block)
+;     ((`(eval block) should) raise:"BaconError")
+;     t
+;   )
+; )
 
 (describe "An instance of Should" `(
-  ; (it "raises an exception if the assertion fails" (do ()
-  ;   (set x ((Should alloc) initWithObject:"foo"))
-  ;   (x equal:"bar")
-  ; ))
+  (it "raises a BaconError if the assertion fails" (do ()
+    (set block `((((Should alloc) initWithObject:"foo") equal:"bar")))
+    ((block should) raise:"BaconError")
+  ))
   
   (it "does not raise an exception if the assertion passes" (do ()
-    (set x ((Should alloc) initWithObject:"foo"))
-    (x equal:"foo")
+    (set block `((((Should alloc) initWithObject:"foo") equal:"foo")))
+    (((block should) not) raise:"BaconError")
   ))
   
   ; (it "catches any type of exception" (do ()
@@ -146,10 +153,17 @@
   ; ))
   
   (it "checks if the given block satisfies" (do ()
-    (("foo" should) satisfy:"pass" block:(do (x) (eq x "foo"))) ; should pass
-    ;(("foo" should) satisfy:(do (x) (eq x "bar"))) ; should fail
-    ((("foo" should) not) satisfy:"pass" block:(do (x) (eq x "bar"))) ; should pass
-    ;((("foo" should) not) satisfy:(do (x) (eq x "foo"))) ; should fail
+    ; should pass
+    (("foo" should) satisfy:"pass" block:(do (x) (eq x "foo")))
+    ; should fail
+    (set block `(("foo" should) satisfy:"fail" block:(do (x) (eq x "bar"))))
+    ((block should) raise:"BaconError")
+    
+    ; should pass
+    ((("foo" should) not) satisfy:"pass" block:(do (x) (eq x "bar")))
+    ; should fail
+    (set block `((("foo" should) not) satisfy:"fail" block:(do (x) (eq x "foo"))))
+    ((block should) raise:"BaconError")
   ))
   
   (it "negates an assertion" (do ()
@@ -163,7 +177,9 @@
   (it "takes a block that's to be called with the `object', the return value indicates success or failure" (do ()
     ("foo" should:(do (string) (eq string "foo")))
     (("foo" should) not:(do (string) (eq string "bar")))
-    ;("foo" should:(do (string) (eq string "bar")))
+    ; should fail
+    (set block `("foo" should:(do (string) (eq string "bar"))))
+    ((block should) raise:"BaconError")
   ))
   
   (it "checks for equality" (do ()
