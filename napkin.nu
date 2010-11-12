@@ -12,6 +12,7 @@
   (- (id) run is
     (puts @name)
     (@requirements each: (do (x) (eval x)))
+    (print "\n")
   )
   
   (- (id) requirement:(id)description block:(id)block is
@@ -170,7 +171,19 @@
     ((("foo" should) not) equal:"bar")
   ))
   
-  (it "extends NSObject to return a Should instance, wrapping that object" (do ()
+  (it "checks for equality" (do ()
+    (("foo" should) equal:"foo")
+    ((("foo" should) not) equal:"bar")
+  ))
+  
+  (it "checks if a specified exception is raised" (do ()
+    ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
+    (((`((NSArray array) objectAtIndex:0) should) not) raise:"SomeRandomException")
+  ))
+))
+
+(describe "NSObject, concerning Bacon extensions" `(
+  (it "returns a Should instance, wrapping that object" (do ()
     (("foo" should) equal:"foo")
   ))
   
@@ -180,15 +193,5 @@
     ; should fail
     (set block `("foo" should:(do (string) (eq string "bar"))))
     ((block should) raise:"BaconError")
-  ))
-  
-  (it "checks for equality" (do ()
-    (("foo" should) equal:"foo")
-    ((("foo" should) not) equal:"bar")
-  ))
-  
-  (it "checks if a specified exception is raised" (do ()
-    ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
-    (((`((NSArray array) objectAtIndex:0) should) not) raise:"SomeRandomException")
   ))
 ))
