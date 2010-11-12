@@ -30,8 +30,9 @@
     (`(("foo" should) equal:"foo") should:succeed)
   ))
   
-  (it "catches any type of exception" (do ()
-    (throw "ohnoes")
+  (it "catches any type of exception so the spec suite can continue" (do ()
+    (set requirement `(self requirement:"throws" block:`(throw "ohnoes") report:nil))
+    ((((eval requirement) should) not) raise)
   ))
   
   (it "checks if the given block satisfies" (do ()

@@ -97,9 +97,11 @@
     (@after addObject:block)
   )
   
-  (- (id) requirement:(id)description block:(id)block is
-    ($BaconSummary addSpecification)
-    (print "- #{description}")
+  (- (id) requirement:(id)description block:(id)block report:(id)report is
+    (if (report)
+      ($BaconSummary addSpecification)
+      (print "- #{description}")
+    )
     
     (try
       (try ; wrap before/requirement/after
@@ -114,22 +116,24 @@
         (self runAfterFilterAndThrow:t)
       )
       (catch (e) ; now really handle the bubbled exception
-        (if (eq (e class) BaconError)
-          (then
-            ($BaconSummary addFailure)
-            (set type " [FAILURE]")
+        (if (report)
+          (if (eq (e class) BaconError)
+            (then
+              ($BaconSummary addFailure)
+              (set type " [FAILURE]")
+            )
+            (else
+              ($BaconSummary addError)
+              (set type " [ERROR]")
+            )
           )
-          (else
-            ($BaconSummary addError)
-            (set type " [ERROR]")
-          )
+          (print type)
+          ($BaconSummary addToErrorLog:e context:@name specification:description type:type)
         )
-        (print type)
-        ($BaconSummary addToErrorLog:e context:@name specification:description type:type)
       )
     )
     
-    (print "\n")
+    (if (report) (print "\n"))
   )
   
   (- (id) runAfterFilterAndThrow:(id)shouldThrow is
@@ -247,25 +251,26 @@
   )
   
   (- (id) handleUnknownMessage:(id)methodName withContext:(id)context is
-    ;(puts ((first methodName) class))
-    (set name "#{(methodName lastObject)}")
+    (set name ((first methodName) stringValue))
     (if (@object respondsToSelector:name)
       (then
+        ; forward the message as-is
         (self satisfy:"be a #{name}" block:(do (object)
           (object sendMessage:methodName withContext:context)
         ))
       )
       (else
         (set predicate "is#{((name substringToIndex:1) uppercaseString)}#{(name substringFromIndex:1)}")
-        ;(puts "Predicate version: #{predicate}")
         (if (@object respondsToSelector:predicate)
           (then
+            ; forward the predicate version of the message
             (self satisfy:"be a #{name}" block:(do (object)
               (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
               (sendMessageWithSymbol object symbol)
             ))
           )
           (else
+            ; the object does not respond to any of the messages
             (super handleUnknownMessage:methodName withContext:context)
           )
         )
@@ -307,7 +312,7 @@
 (macro-0 it
   (set __description (car margs))
   (set __block (cdr margs))
-  (self requirement:__description block:__block)
+  (self requirement:__description block:__block report:t)
 )
 
 ; TODO for some reason this only works if the macro accepts an arg like string, before the block.
