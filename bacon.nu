@@ -60,11 +60,16 @@
 (set $BaconSummary ((BaconSummary alloc) init))
 
 (class Context is NSObject
-  (ivar (id) name
-        (id) requirements)
+  ; use the dynamic `ivars' so the user can add ivars in before/after
+  (ivars (id) name
+         (id) before
+         (id) after
+         (id) requirements)
   
   (- (id) initWithName:(id)name requirements:(id)requirements is
     (self init)
+    (set @before (NSMutableArray array))
+    (set @after (NSMutableArray array))
     (set @name name)
     (set @requirements requirements)
     self
@@ -76,24 +81,49 @@
     (print "\n")
   )
   
+  (- (id) before:(id)block is
+    ;(eval block)
+    (@before addObject:block)
+  )
+  
+  (- (id) after:(id)block is
+    ;(eval block)
+    (@after addObject:block)
+  )
+  
   (- (id) requirement:(id)description block:(id)block is
     ($BaconSummary addSpecification)
     (print "- #{description}")
+    (set rescued nil)
+    ; perform the before filters and the requirement
     (try
+      (@before each: (do (x) (eval x)))
       (eval block)
       (catch (e)
         (if (eq (e class) BaconError)
           (then
             ($BaconSummary addFailure)
-            (set type " [FAILURE]")
+            (set rescued " [FAILURE]")
           )
           (else
             ($BaconSummary addError)
-            (set type " [ERROR]")
+            (set rescued " [ERROR]")
           )
         )
-        (print type)
-        ($BaconSummary addToErrorLog:e context:@name specification:description type:type)
+      )
+    )
+    ; perform the after filters and only let the exception bubble through if there was no failure yet
+    (try
+      (@after each: (do (x) (eval x)))
+      (catch (e)
+        (unless (rescued) (throw e))
+      )
+    )
+    ; in case there has been a failure, report it
+    (if (rescued)
+      (then
+        (print rescued)
+        ($BaconSummary addToErrorLog:e context:@name specification:description type:rescued)
       )
     )
     (print "\n")
@@ -202,4 +232,16 @@
   (set __description (car margs))
   (set __block (cdr margs))
   (self requirement:__description block:__block)
+)
+
+; TODO for some reason this only works if the macro accepts an arg like string, before the block.
+(macro-0 before
+  (set __when (car margs))
+  (set __block (cdr margs))
+  (self before:__block)
+)
+(macro-0 after
+  (set __when (car margs))
+  (set __block (cdr margs))
+  (self after:__block)
 )

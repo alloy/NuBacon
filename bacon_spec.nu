@@ -86,4 +86,55 @@
   ))
 ))
 
+; describe "before/after" do
+;   before do
+;     @a = 1
+;     @b = 2
+;   end
+; 
+;   before do
+;     @a = 2
+;   end
+; 
+;   after do
+;     @a.should.equal 2
+;     @a = 3
+;   end
+; 
+;   after do
+;     @a.should.equal 3
+;   end
+;   
+;   it "should run in the right order" do
+;     @a.should.equal 2
+;     @b.should.equal 2
+;   end
+; end
+
+(describe "before/after" `(
+  (before "each" (do ()
+    (set @a 1)
+    (set @b 2)
+  ))
+  
+  (before "each" (do ()
+    (set @a 2)
+  ))
+  
+  (after "each" (do ()
+    ((@a should) equal:2)
+    (set @a 3)
+  ))
+  
+  (after "each" (do ()
+    (puts "hier!")
+    ((@a should) equal:3)
+  ))
+  
+  (it "runs in the right order" (do ()
+    ((@a should) equal:2)
+    ((@b should) equal:2)
+  ))
+))
+
 ($BaconSummary print)
