@@ -21,6 +21,7 @@
       (catch (e)
         (if (eq (e class) BaconError)
           (then (print " [Failed: #{(e reason)}]")) ; TODO this must be reported on exit
+          ;(else (print " [Failed: #{(e reason)}]"))
           (else (print " [Failed]"))
         )
       )
@@ -53,6 +54,15 @@
     self
   )
   
+  (- (id) evaluateBlock:(id)block is
+    (unless (block @object)
+      (then
+        (set d "block returned a falsy value")
+        (throw ((BaconError alloc) initWithDescription:d))
+      )
+    )
+  )
+  
   (- (id) equal:(id)value is
     (unless (eq @object value)
       (set d "`#{@object}' does not equal `#{value}'")
@@ -80,6 +90,7 @@
 
 (class NSObject
   (- (id) should is ((Should alloc) initWithObject:self))
+  (- (id) should:(id)block is (((Should alloc) initWithObject:self) evaluateBlock:block))
 )
 
 ; TODO does a macro have an advantage here?
@@ -89,6 +100,14 @@
   (set __description (car margs))
   (set __block (cdr margs))
   (self requirement:__description block:__block)
+)
+
+; Hooray for meta-testing.
+(function fail ()
+  (do (block)
+    ((`(eval block) should) raise:"BaconError")
+    t
+  )
 )
 
 (describe "An instance of Should" `(
@@ -108,6 +127,11 @@
   
   (it "extends NSObject to return a Should instance, wrapping that object" (do ()
     (("foo" should) equal:"foo")
+  ))
+  
+  (it "takes a list that's to be evaled, the return value indicates success or failure" (do ()
+    ("foo" should:(do (string) (eq string "foo")))
+    ;("foo" should:(do (string) (eq string "bar")))
   ))
   
   (it "compares for equality" (do ()
