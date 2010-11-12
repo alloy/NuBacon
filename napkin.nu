@@ -1,52 +1,58 @@
 (class BaconCounter is NSObject
-  (ivar (id) dictionary)
+  (ivar (id) counters
+        (id) errorLog
+  )
   
   (- (id) init is
     (super init)
-    (set @dictionary (NSMutableDictionary dictionaryWithList:`("specifications" 0 "requirements" 0 "failures" 0 "errors" 0)))
+    (set @errorLog "")
+    (set @counters (NSMutableDictionary dictionaryWithList:`("specifications" 0 "requirements" 0 "failures" 0 "errors" 0)))
     (self)
   )
   
   (- (id) specifications is
-    (@dictionary valueForKey:"specifications")
+    (@counters valueForKey:"specifications")
   )
   
   (- (id) addSpecification is
-    (@dictionary setValue:(+ (self specifications) 1) forKey:"specifications")
+    (@counters setValue:(+ (self specifications) 1) forKey:"specifications")
   )
   
   (- (id) requirements is
-    (@dictionary valueForKey:"requirements")
+    (@counters valueForKey:"requirements")
   )
   
   (- (id) addRequirement is
-    (@dictionary setValue:(+ (self requirements) 1) forKey:"requirements")
+    (@counters setValue:(+ (self requirements) 1) forKey:"requirements")
   )
   
   (- (id) failures is
-    (@dictionary valueForKey:"failures")
+    (@counters valueForKey:"failures")
   )
   
   (- (id) addFailure is
-    (@dictionary setValue:(+ (self failures) 1) forKey:"failures")
+    (@counters setValue:(+ (self failures) 1) forKey:"failures")
   )
   
   (- (id) errors is
-    (@dictionary valueForKey:"errors")
+    (@counters valueForKey:"errors")
   )
   
   (- (id) addError is
-    (@dictionary setValue:(+ (self errors) 1) forKey:"errors")
+    (@counters setValue:(+ (self errors) 1) forKey:"errors")
+  )
+  
+  (- (id) addToErrorLog:(id)message is
+    (@errorLog appendString:message)
   )
   
   (- (id) printSummary is
-    (puts $BaconErrorLog)
+    (puts @errorLog)
     (puts "#{(self specifications)} specifications (#{(self requirements)} requirements), #{(self failures)} failures, #{(self errors)} errors")
   )
 )
 
 (set $BaconCounter ((BaconCounter alloc) init))
-(set $BaconErrorLog "")
 
 (class Context is NSObject
   (ivar (id) name
@@ -88,7 +94,7 @@
         )
         (print type)
         (message appendString:type)
-        ($BaconErrorLog appendString:"#{message}\n")
+        ($BaconCounter addToErrorLog:"#{message}\n")
       )
     )
     (print "\n")
