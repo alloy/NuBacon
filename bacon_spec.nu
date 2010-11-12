@@ -61,6 +61,11 @@
     ((("foo" should) not) equal:"bar")
   ))
   
+  (it "checks if any exception is raised" (do ()
+    ((rangeException should) raise)
+    (((`("foo") should) not) raise)
+  ))
+  
   (it "checks if a specified exception is raised" (do ()
     ((rangeException should) raise:"NSRangeException")
     (((rangeException should) not) raise:"SomeRandomException")
@@ -143,6 +148,35 @@
       ((@c should) be:nil)
     ))
   ))
+))
+
+(shared "a shared context" `(
+  (it "gets called where it is included" (do ()
+    ((t should) be:t)
+  ))
+))
+
+(shared "another shared context" `(
+  (it "can access data" (do ()
+    ((@magic should) be:42)
+  ))
+))
+
+(describe "shared/behaves_like" `(
+  (behaves_like "a shared context")
+  
+  (it "raises when the context is not found" (do ()
+    (set e ((`(behaves_like "whoops") should) raise))
+    ((e should) equal:"No such context `whoops'")
+  ))
+  
+  (behaves_like "a shared context")
+  
+  (before "each" (do ()
+    (set @magic 42)
+  ))
+  
+  (behaves_like "another shared context")
 ))
 
 ($BaconSummary print)

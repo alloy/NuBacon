@@ -217,6 +217,21 @@
     ))
   )
   
+  (- (id) raise is
+    (set result nil)
+    (self satisfy:"raise any exception" block:(do (object)
+      (try
+        (eval object)
+        (catch (e)
+          (set result e)
+          t
+        )
+        nil
+      )
+    ))
+    result
+  )
+  
   (- (id) raise:(id)exceptionName is
     (set result nil)
     (self satisfy:"raise an exception of type `#{exceptionName}'" block:(do (object)
@@ -272,4 +287,24 @@
   (set __when (car margs))
   (set __block (cdr margs))
   (self after:__block)
+)
+
+; shared contexts
+
+(set $BaconShared (NSMutableDictionary dictionary))
+
+(macro-0 shared
+  (set __name (car margs))
+  (set __requirements (eval (cdr margs)))
+  ($BaconShared setValue:__requirements forKey:__name)
+)
+
+(macro-0 behaves_like
+  (set __name (car margs))
+  (set context ($BaconShared valueForKey:__name))
+  (if (context)
+    ; each requirement is a complete `it' block
+    (then (context each: (do (requirement) (eval requirement))))
+    (else (throw "No such context `#{__name}'"))
+  )
 )
