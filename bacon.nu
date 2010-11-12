@@ -250,6 +250,12 @@
     result
   )
   
+  (- (id) respondToSelector:(id)sel is
+    (self satisfy:"respondToSelector #{sel}" block:(do (object)
+      (object respondsToSelector:sel)
+    ))
+  )
+  
   (- (id) handleUnknownMessage:(id)methodName withContext:(id)context is
     (set name ((first methodName) stringValue))
     (if (@object respondsToSelector:name)
@@ -263,10 +269,10 @@
         (set predicate "is#{((name substringToIndex:1) uppercaseString)}#{(name substringFromIndex:1)}")
         (if (@object respondsToSelector:predicate)
           (then
-            ; forward the predicate version of the message
+            ; forward the predicate version of the message with the args
             (self satisfy:"be a #{name}" block:(do (object)
               (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
-              (sendMessageWithSymbol object symbol)
+              (sendMessageWithSymbol object symbol (cdr methodName))
             ))
           )
           (else
@@ -281,8 +287,8 @@
 
 ; TODO figure out for real how this actually works and why getting the symbol in the macro doesn't work
 ; (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
-(macro-1 sendMessageWithSymbol (object message)
-  `(,object ,(eval message))
+(macro-1 sendMessageWithSymbol (object message args)
+  `(,object ,(eval message) ,@(eval args))
 )
 
 (class NSObject

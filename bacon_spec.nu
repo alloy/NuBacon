@@ -81,11 +81,20 @@
   (it "checks if the object has the method and if so forward the message" (do ()
     (`((("/an/absolute/path" should) be) isAbsolutePath) should:succeed)
     (`((("a/relative/path" should) be) isAbsolutePath) should:fail)
+    (`(("foo" should) equalToString:"foo") should:succeed)
+    (`(("foo" should) equalToString:"bar") should:fail)
   ))
   
   (it "checks if the object has the predicate method and if so forward the message" (do ()
     (`((("/an/absolute/path" should) be) absolutePath) should:succeed)
     (`((("a/relative/path" should) be) absolutePath) should:fail)
+  ))
+  
+  (it "checks if the object responds to the given selector" (do ()
+    (`(("foo" should) respondToSelector:"isAbsolutePath") should:succeed)
+    (`((("foo" should) not) respondToSelector:"noWay") should:succeed)
+    (`(("foo" should) respondToSelector:"noWay") should:fail)
+    (`((("foo" should) not) respondToSelector:"isAbsolutePath") should:fail)
   ))
 ))
 
