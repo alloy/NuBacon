@@ -245,6 +245,26 @@
     ))
     result
   )
+  
+  (- (id) handleUnknownMessage:(id)methodName withContext:(id)context is
+    (set name "#{(methodName lastObject)}")
+    (set predicate "is#{((name substringToIndex:1) uppercaseString)}#{(name substringFromIndex:1)}")
+    ;(puts "Predicate version: #{predicate}")
+    (if (@object respondsToSelector:predicate)
+      (then
+        (self satisfy:"be a #{name}" block:(do (object)
+          ;(set r (eval (object predicate))) ; TODO better way to send and have return value work?
+          ;(set r (object sendMessage:(eval "`(#{predicate})") withContext:context))
+          (set r (object valueForKey:predicate))
+          (puts r)
+          r
+        ))
+      )
+      (else
+        (super handleUnknownMessage:methodName withContext:context)
+      )
+    )
+  )
 )
 
 (class NSObject

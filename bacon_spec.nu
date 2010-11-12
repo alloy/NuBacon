@@ -76,6 +76,11 @@
     ((((e class) name) should) equal:"NuException")
     (((e name) should) equal:"NSRangeException")
   ))
+  
+  (it "checks if the object has the predicate method and if so forward the message" (do ()
+    (`((("/an/absolute/path" should) be) absolutePath) should:succeed)
+    (`((("a/relative/path" should) be) absolutePath) should:fail)
+  ))
 ))
 
 (describe "NSObject, concerning Bacon extensions" `(
