@@ -98,14 +98,17 @@
   )
   
   (- (id) raise:(id)exceptionName is
+    (set result nil)
     (self satisfy:"raise an exception of type `#{exceptionName}'" block:(do (object)
       (try
         (eval object)
         (catch (e)
+          (set result e)
           (eq (e name) exceptionName)
         )
       )
     ))
+    result
   )
 )
 
@@ -141,6 +144,8 @@
 (set equalFoo (do (x) (eq x "foo")))
 (set equalBar (do (x) (eq x "bar")))
 
+(set rangeException `((NSArray array) objectAtIndex:0))
+
 (describe "An instance of Should" `(
   (it "raises a BaconError if the assertion fails" (do ()
     (`(("foo" should) equal:"bar") should:fail)
@@ -171,8 +176,14 @@
   ))
   
   (it "checks if a specified exception is raised" (do ()
-    ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
-    (((`((NSArray array) objectAtIndex:0) should) not) raise:"SomeRandomException")
+    ((rangeException should) raise:"NSRangeException")
+    (((rangeException should) not) raise:"SomeRandomException")
+  ))
+  
+  (it "returns the raised exception" (do ()
+    (set e ((rangeException should) raise:"NSRangeException"))
+    ((((e class) name) should) equal:"NuException")
+    (((e name) should) equal:"NSRangeException")
   ))
 ))
 
