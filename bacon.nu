@@ -274,6 +274,8 @@
   )
 )
 
+; TODO figure out for real how this actually works and why getting the symbol in the macro doesn't work
+; (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
 (macro-1 sendMessageWithSymbol (object message)
   `(,object ,(eval message))
 )
