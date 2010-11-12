@@ -52,6 +52,7 @@
   )
   
   (- (id) print is
+    (print "\n")
     (puts @errorLog)
     (puts "#{(self specifications)} specifications (#{(self requirements)} requirements), #{(self failures)} failures, #{(self errors)} errors")
   )
@@ -75,19 +76,24 @@
     self
   )
   
+  (- (id) childContextWithName:(id)childName requirements:(id)requirements is
+    (set child ((Context alloc) initWithName:"#{@name} #{childName}" requirements:requirements))
+    (@before each: (do (x) (child before:x)))
+    (@after each: (do (x) (child after:x)))
+    child
+  )
+  
   (- (id) run is
+    (print "\n")
     (puts @name)
     (@requirements each: (do (x) (eval x)))
-    (print "\n")
   )
   
   (- (id) before:(id)block is
-    ;(eval block)
     (@before addObject:block)
   )
   
   (- (id) after:(id)block is
-    ;(eval block)
     (@after addObject:block)
   )
   
@@ -231,8 +237,24 @@
   (- (id) should:(id)block is (((Should alloc) initWithObject:self) satisfy:"satisfy the given block" block:block))
 )
 
-; TODO does a macro have an advantage here?
-(function describe (name requirements) (((Context alloc) initWithName:name requirements:requirements) run))
+(macro-0 describe
+  (set __name (car margs))
+  (set __requirements (eval (cdr margs)))
+  (try
+    (set parent self)
+    ((parent childContextWithName:__name requirements:__requirements) run)
+    (catch (e)
+      (if (eq (e reason) "undefined symbol self while evaluating expression (set parent self)")
+        (then
+          ; not running inside a context
+          (((Context alloc) initWithName:__name requirements:__requirements) run)
+        )
+        ; another type of exception occured
+        (else (throw e))
+      )
+    )
+  )
+)
 
 (macro-0 it
   (set __description (car margs))

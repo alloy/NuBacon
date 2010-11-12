@@ -109,6 +109,40 @@
 ;     @a.should.equal 2
 ;     @b.should.equal 2
 ;   end
+;   
+;   describe "when nested" do
+;     before do
+;       @c = 5
+;     end
+;     
+;     it "should run from higher level" do
+;       @a.should.equal 2
+;       @b.should.equal 2
+;     end
+;     
+;     it "should run at the nested level" do
+;       @c.should.equal 5
+;     end
+;     
+;     before do
+;       @a = 5
+;     end
+;     
+;     it "should run in the right order" do
+;       @a.should.equal 5
+;       @a = 2
+;     end
+;   end
+;   
+;   it "should not run from lower level" do
+;     @c.should.be.nil
+;   end
+;   
+;   describe "when nested at a sibling level" do
+;     it "should not run from sibling level" do
+;       @c.should.be.nil
+;     end
+;   end
 ; end
 
 (describe "before/after" `(
@@ -133,6 +167,40 @@
   (it "runs in the right order" (do ()
     ((@a should) equal:2)
     ((@b should) equal:2)
+  ))
+  
+  (describe "when nested" `(
+    (before "each" (do ()
+      (set @c 5)
+    ))
+    
+    (it "runs from higher level" (do ()
+      ((@a should) equal:2)
+      ((@b should) equal:2)
+    ))
+    
+    (it "runs at the nested level" (do ()
+      ((@c should) equal:5)
+    ))
+    
+    (before "each" (do ()
+      (set @a 5)
+    ))
+    
+    (it "runs in the right order" (do ()
+      ((@a should) equal:5)
+      (set @a 2)
+    ))
+  ))
+  
+  (it "does not run from lower level" (do ()
+    ((@c should) be:nil)
+  ))
+  
+  (describe "when nested at a sibling level" (do ()
+    (it "does not run from sibling level" (do ()
+      ((@c should) be:nil)
+    ))
   ))
 ))
 
