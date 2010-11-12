@@ -58,9 +58,15 @@
   )
   
   (- (id) not is
-    ;(puts "called not!")
+    ;(puts "called not")
     (set @negated t)
     self
+  )
+  
+  (- (id) not:(id)block is
+    ;(puts "called not:")
+    (set @negated t)
+    (self satisfy:"satisfy the given block" block:block)
   )
   
   (- (id) satisfy:(id)description block:(id)block is
@@ -126,7 +132,7 @@
 
 (class NSObject
   (- (id) should is ((Should alloc) initWithObject:self))
-  (- (id) should:(id)block is (((Should alloc) initWithObject:self) evaluateBlock:block))
+  (- (id) should:(id)block is (((Should alloc) initWithObject:self) satisfy:"satisfy the given block" block:block))
 )
 
 ; TODO does a macro have an advantage here?
@@ -175,11 +181,12 @@
   ; (it "extends NSObject to return a Should instance, wrapping that object" (do ()
   ;   (("foo" should) equal:"foo")
   ; ))
-  ; 
-  ; (it "takes a list that's to be evaled, the return value indicates success or failure" (do ()
-  ;   ("foo" should:(do (string) (eq string "foo")))
-  ;   ;("foo" should:(do (string) (eq string "bar")))
-  ; ))
+  
+  (it "takes a block that's to be called with the `object', the return value indicates success or failure" (do ()
+    ("foo" should:(do (string) (eq string "foo")))
+    (("foo" should) not:(do (string) (eq string "bar")))
+    ;("foo" should:(do (string) (eq string "bar")))
+  ))
   
   (it "checks for equality" (do ()
     (("foo" should) equal:"foo")
