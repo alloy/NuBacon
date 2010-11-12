@@ -247,24 +247,35 @@
   )
   
   (- (id) handleUnknownMessage:(id)methodName withContext:(id)context is
+    ;(puts ((first methodName) class))
     (set name "#{(methodName lastObject)}")
-    (set predicate "is#{((name substringToIndex:1) uppercaseString)}#{(name substringFromIndex:1)}")
-    ;(puts "Predicate version: #{predicate}")
-    (if (@object respondsToSelector:predicate)
+    (if (@object respondsToSelector:name)
       (then
         (self satisfy:"be a #{name}" block:(do (object)
-          ;(set r (eval (object predicate))) ; TODO better way to send and have return value work?
-          ;(set r (object sendMessage:(eval "`(#{predicate})") withContext:context))
-          (set r (object valueForKey:predicate))
-          (puts r)
-          r
+          (object sendMessage:methodName withContext:context)
         ))
       )
       (else
-        (super handleUnknownMessage:methodName withContext:context)
+        (set predicate "is#{((name substringToIndex:1) uppercaseString)}#{(name substringFromIndex:1)}")
+        ;(puts "Predicate version: #{predicate}")
+        (if (@object respondsToSelector:predicate)
+          (then
+            (self satisfy:"be a #{name}" block:(do (object)
+              (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
+              (sendMessageWithSymbol object symbol)
+            ))
+          )
+          (else
+            (super handleUnknownMessage:methodName withContext:context)
+          )
+        )
       )
     )
   )
+)
+
+(macro-1 sendMessageWithSymbol (object message)
+  `(,object ,(eval message))
 )
 
 (class NSObject
