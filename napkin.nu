@@ -119,7 +119,6 @@
         (catch (e)
           (eq (e name) exceptionName)
         )
-        (else nil)
       )
     ))
   )
