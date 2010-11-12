@@ -112,21 +112,16 @@
     ))
   )
   
-  ; (- (id) ==:(id)value is
-  ;   (eq @object value))
-  
   (- (id) raise:(id)exceptionName is
-    (try
-      (eval @object)
-      (catch (e)
-        (unless (eq (e name) exceptionName)
-          (then
-            (set d "expected to raise an exception of type `#{exceptionName}', but was a `#{(e name)}'")
-            (throw ((BaconError alloc) initWithDescription:d))
-          )
+    (self satisfy:"raise an exception of type `#{exceptionName}'" block:(do (object)
+      (try
+        (eval object)
+        (catch (e)
+          (eq (e name) exceptionName)
         )
+        (else nil)
       )
-    )
+    ))
   )
 )
 
@@ -193,7 +188,8 @@
     ((("foo" should) not) equal:"bar")
   ))
   
-  ; (it "checks if a specified exception is raised" (do ()
-  ;   ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
-  ; ))
+  (it "checks if a specified exception is raised" (do ()
+    ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
+    (((`((NSArray array) objectAtIndex:0) should) not) raise:"SomeRandomException")
+  ))
 ))
