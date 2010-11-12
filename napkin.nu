@@ -58,24 +58,26 @@
   )
   
   (- (id) not is
-    (puts "called not!")
+    ;(puts "called not!")
     (set @negated t)
     self
   )
   
-  (- (id) satisfy:(id)block is
+  (- (id) satisfy:(id)description block:(id)block is
+    (if (@negated)
+      (then (set d "expected `#{@object}' to not #{description}"))
+      (else (set d "expected `#{@object}' to #{description}"))
+    )
     (set result (block @object))
-    (puts "result is: #{result}")
+    ;(puts "result is: #{result}")
     (if (result)
       (then
         (if (@negated)
-          (set d "not satisfied")
           (throw ((BaconError alloc) initWithDescription:d))
         )
       )
       (else
         (unless (@negated)
-          (set d "not satisfied")
           (throw ((BaconError alloc) initWithDescription:d))
         )
       )
@@ -91,11 +93,17 @@
     )
   )
   
+  ; (- (id) equal:(id)value is
+  ;   (unless (eq @object value)
+  ;     (set d "`#{@object}' does not equal `#{value}'")
+  ;     (throw ((BaconError alloc) initWithDescription:d))
+  ;   )
+  ; )
+  
   (- (id) equal:(id)value is
-    (unless (eq @object value)
-      (set d "`#{@object}' does not equal `#{value}'")
-      (throw ((BaconError alloc) initWithDescription:d))
-    )
+    (self satisfy:"equal `#{value}'" block:(do (object)
+      (eq object value)
+    ))
   )
   
   ; (- (id) ==:(id)value is
@@ -154,14 +162,14 @@
   ; ))
   
   (it "checks if the given block satisfies" (do ()
-    (("foo" should) satisfy:(do (x) (eq x "foo"))) ; should pass
+    (("foo" should) satisfy:"pass" block:(do (x) (eq x "foo"))) ; should pass
     ;(("foo" should) satisfy:(do (x) (eq x "bar"))) ; should fail
-    ((("foo" should) not) satisfy:(do (x) (eq x "bar"))) ; should pass
+    ((("foo" should) not) satisfy:"pass" block:(do (x) (eq x "bar"))) ; should pass
     ;((("foo" should) not) satisfy:(do (x) (eq x "foo"))) ; should fail
   ))
   
   ; (it "negates an assertion" (do ()
-  ;   ((("foo" should) not) equal:"foo")
+  ;   ((("foo" should) not) equal:"bar")
   ; ))
   
   ; (it "extends NSObject to return a Should instance, wrapping that object" (do ()
@@ -172,11 +180,12 @@
   ;   ("foo" should:(do (string) (eq string "foo")))
   ;   ;("foo" should:(do (string) (eq string "bar")))
   ; ))
-  ; 
-  ; (it "checks for equality" (do ()
-  ;   (("foo" should) equal:"foo")
-  ; ))
-  ; 
+  
+  (it "checks for equality" (do ()
+    (("foo" should) equal:"foo")
+    ((("foo" should) not) equal:"bar")
+  ))
+  
   ; (it "checks if a specified exception is raised" (do ()
   ;   ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
   ; ))
