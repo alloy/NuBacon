@@ -213,10 +213,9 @@
   ))
   
   (it "takes a block that's to be called with the `object', the return value indicates success or failure" (do ()
-    ("foo" should:(do (string) (eq string "foo")))
-    (("foo" should) not:(do (string) (eq string "bar")))
-    ; should fail
-    (set block `("foo" should:(do (string) (eq string "bar"))))
-    ((block should) raise:"BaconError")
+    (`("foo" should:equalFoo) should:succeed)
+    (`("foo" should:equalBar) should:fail)
+    (`(("foo" should) not:equalBar) should:succeed)
+    (`(("foo" should) not:equalFoo) should:fail)
   ))
 ))
