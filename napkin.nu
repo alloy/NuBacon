@@ -1,3 +1,53 @@
+(class BaconCounter is NSObject
+  (ivar (id) dictionary)
+  
+  (- (id) init is
+    (super init)
+    (set @dictionary (NSMutableDictionary dictionaryWithList:`("specifications" 0 "requirements" 0 "failures" 0 "errors" 0)))
+    (self)
+  )
+  
+  (- (id) specifications is
+    (@dictionary valueForKey:"specifications")
+  )
+  
+  (- (id) addSpecification is
+    (@dictionary setValue:(+ (self specifications) 1) forKey:"specifications")
+  )
+  
+  (- (id) requirements is
+    (@dictionary valueForKey:"requirements")
+  )
+  
+  (- (id) addRequirement is
+    (@dictionary setValue:(+ (self requirements) 1) forKey:"requirements")
+  )
+  
+  (- (id) failures is
+    (@dictionary valueForKey:"failures")
+  )
+  
+  (- (id) addFailure is
+    (@dictionary setValue:(+ (self failures) 1) forKey:"failures")
+  )
+  
+  (- (id) errors is
+    (@dictionary valueForKey:"errors")
+  )
+  
+  (- (id) addError is
+    (@dictionary setValue:(+ (self errors) 1) forKey:"errors")
+  )
+  
+  (- (id) printSummary is
+    (puts $BaconErrorLog)
+    (puts "#{(self specifications)} specifications (#{(self requirements)} requirements), #{(self failures)} failures, #{(self errors)} errors")
+  )
+)
+
+(set $BaconCounter ((BaconCounter alloc) init))
+(set $BaconErrorLog "")
+
 (class Context is NSObject
   (ivar (id) name
         (id) requirements)
@@ -16,15 +66,29 @@
   )
   
   (- (id) requirement:(id)description block:(id)block is
+    ($BaconCounter addSpecification)
     (print "- #{description}")
     (try
       (eval block)
       (catch (e)
-        (if (eq (e class) BaconError)
-          (then (print " [Failed: #{(e reason)}]")) ; TODO this must be reported on exit
-          (else (print " [Failed: #{(e reason)}]"))
-          ;(else (print " [Failed]"))
+        (set message "#{@name} - #{description}: ")
+        (if (e respondsToSelector:"reason")
+          (then (message appendString:(e reason)))
+          (else (message appendString:(e description)))
         )
+        (if (eq (e class) BaconError)
+          (then
+            ($BaconCounter addFailure)
+            (set type " [FAILURE]")
+          )
+          (else
+            ($BaconCounter addError)
+            (set type " [ERROR]")
+          )
+        )
+        (print type)
+        (message appendString:type)
+        ($BaconErrorLog appendString:"#{message}\n")
       )
     )
     (print "\n")
@@ -79,6 +143,7 @@
   )
   
   (- (id) satisfy:(id)description block:(id)block is
+    ($BaconCounter addRequirement)
     (if (@negated)
       (then (set d "expected `#{@object}' to not #{description}"))
       (else (set d "expected `#{@object}' to #{description}"))
@@ -164,9 +229,9 @@
     (`(("foo" should) equal:"foo") should:succeed)
   ))
   
-  ; (it "catches any type of exception" (do ()
-  ;   (throw "ohnoes")
-  ; ))
+  (it "catches any type of exception" (do ()
+    (throw "ohnoes")
+  ))
   
   (it "checks if the given block satisfies" (do ()
     (`(("foo" should) satisfy:"pass" block:equalFoo) should:succeed)
@@ -219,3 +284,5 @@
     (`(("foo" should) not:equalFoo) should:fail)
   ))
 ))
+
+($BaconCounter printSummary)
