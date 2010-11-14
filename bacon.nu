@@ -160,6 +160,12 @@
   (- (id) reason is @description)
 )
 
+(macro-1 alias (klass new-name name)
+  (eval `(set __method (,klass instanceMethodWithName:,name)))
+  (eval `(set __body (__method block)))
+  `(,klass addInstanceMethod:,new-name signature:(__method signature) body:__body)
+)
+
 (class Should is NSObject
   (ivar (id) object
         (id) negated
@@ -189,9 +195,15 @@
     self
   )
   
+  (alias Should "a" "be")
+  (alias Should "an" "be")
+  
   (- (id) be:(id)value is
     (self equal:value)
   )
+  
+  (alias Should "a:" "be:")
+  (alias Should "an:" "be:")
   
   (- (id) satisfy:(id)description block:(id)block is
     ($BaconSummary addRequirement)
@@ -285,15 +297,15 @@
   )
 )
 
+(class NSObject
+  (- (id) should is ((Should alloc) initWithObject:self))
+  (- (id) should:(id)block is (((Should alloc) initWithObject:self) satisfy:"satisfy the given block" block:block))
+)
+
 ; TODO figure out for real how this actually works and why getting the symbol in the macro doesn't work
 ; (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
 (macro-1 sendMessageWithSymbol (object message args)
   `(,object ,(eval message) ,@(eval args))
-)
-
-(class NSObject
-  (- (id) should is ((Should alloc) initWithObject:self))
-  (- (id) should:(id)block is (((Should alloc) initWithObject:self) satisfy:"satisfy the given block" block:block))
 )
 
 (macro-0 describe
