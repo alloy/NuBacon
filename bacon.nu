@@ -160,12 +160,6 @@
   (- (id) reason is @description)
 )
 
-(macro-1 alias (klass new-name name)
-  (eval `(set __method (,klass instanceMethodWithName:,name)))
-  (eval `(set __body (__method block)))
-  `(,klass addInstanceMethod:,new-name signature:(__method signature) body:__body)
-)
-
 (class Should is NSObject
   (ivar (id) object
         (id) negated
@@ -191,12 +185,9 @@
     (self satisfy:"satisfy the given block" block:block)
   )
   
-  (- (id) be is
-    self
-  )
-  
-  (alias Should "a" "be")
-  (alias Should "an" "be")
+  (- (id) be is self)
+  (- (id) a is self)
+  (- (id) an is self)
   
   (- (id) be:(id)value is
     (self equal:value)
