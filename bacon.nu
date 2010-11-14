@@ -202,9 +202,6 @@
     (self equal:value)
   )
   
-  (alias Should "a:" "be:")
-  (alias Should "an:" "be:")
-  
   (- (id) satisfy:(id)description block:(id)block is
     ($BaconSummary addRequirement)
     (if (@negated)

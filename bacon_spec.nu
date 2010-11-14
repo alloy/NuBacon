@@ -54,13 +54,9 @@
   ))
   
   ; TODO probably does change the description of the requirement
-  (it "has `be:', `a:', and `an:' syntactic sugar methods which check for equality" (do ()
+  (it "has a `be:' syntactic sugar method which checks for equality" (do ()
     (`(aRequirement be:"foo") should:succeed)
     (`(aRequirement be:"bar") should:fail)
-    (`(aRequirement a:"foo") should:succeed)
-    (`(aRequirement a:"bar") should:fail)
-    (`(aRequirement an:"foo") should:succeed)
-    (`(aRequirement an:"bar") should:fail)
   ))
   
   (it "checks for equality" (do ()
