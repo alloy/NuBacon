@@ -295,7 +295,7 @@
             (set thirdPersonForm (parts componentsJoinedByString:""))
             (if (@object respondsToSelector:thirdPersonForm)
               (then
-                ; example: respondToSelector: is transformed to respondsToSelector:
+                ; example: respondsToSelector: is matched as respondToSelector:
                 (self satisfy:description block:(do (object)
                   (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:thirdPersonForm))
                   (sendMessageWithSymbol object symbol (cdr methodName))
