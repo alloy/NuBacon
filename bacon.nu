@@ -65,13 +65,15 @@
   (ivars (id) name
          (id) before
          (id) after
-         (id) requirements)
+         (id) requirements
+         (id) printedName)
   
   (- (id) initWithName:(id)name requirements:(id)requirements is
     (self init)
     (set @before (NSMutableArray array))
     (set @after (NSMutableArray array))
     (set @name name)
+    (set @printedName nil)
     (set @requirements requirements)
     self
   )
@@ -84,8 +86,6 @@
   )
   
   (- (id) run is
-    (print "\n")
-    (puts @name)
     (@requirements each: (do (x) (eval x)))
   )
   
@@ -99,6 +99,10 @@
   
   (- (id) requirement:(id)description block:(id)block report:(id)report is
     (if (report)
+      (unless (@printedName)
+        (set @printedName t)
+        (puts "\n#{@name}")
+      )
       ($BaconSummary addSpecification)
       (print "- #{description}")
     )
@@ -352,3 +356,4 @@
     (else (throw "No such context `#{__name}'"))
   )
 )
+
