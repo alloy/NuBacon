@@ -265,12 +265,6 @@
     result
   )
   
-  (- (id) respondToSelector:(id)sel is
-    (self satisfy:"respondToSelector #{sel}" block:(do (object)
-      (object respondsToSelector:sel)
-    ))
-  )
-  
   (- (id) handleUnknownMessage:(id)methodName withContext:(id)context is
     (set name ((first methodName) stringValue))
     (set args (cdr methodName))
@@ -294,8 +288,24 @@
             ))
           )
           (else
-            ; the object does not respond to any of the messages
-            (super handleUnknownMessage:methodName withContext:context)
+            (set parts ((regex "([A-Z][a-z]*)") splitString:name))
+            (set firstPart (parts objectAtIndex:0))
+            (set firstPart (firstPart stringByAppendingString:"s"))
+            (parts replaceObjectAtIndex:0 withObject:firstPart)
+            (set thirdPersonForm (parts componentsJoinedByString:""))
+            (if (@object respondsToSelector:thirdPersonForm)
+              (then
+                ; example: respondToSelector: is transformed to respondsToSelector:
+                (self satisfy:description block:(do (object)
+                  (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:thirdPersonForm))
+                  (sendMessageWithSymbol object symbol (cdr methodName))
+                ))
+              )
+              (else
+                ; the object does not respond to any of the messages
+                (super handleUnknownMessage:methodName withContext:context)
+              )
+            )
           )
         )
       )

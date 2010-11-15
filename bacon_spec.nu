@@ -107,12 +107,19 @@
     (`((("a/relative/path" should) be) absolutePath) should:fail)
   ))
   
-  (it "checks if the object responds to the given selector" (do ()
+  (it "checks if the object has the first person version of the method and if so forward the message" (do ()
     (`(("foo" should) respondToSelector:"isAbsolutePath") should:succeed)
     (`((("foo" should) not) respondToSelector:"noWay") should:succeed)
     (`(("foo" should) respondToSelector:"noWay") should:fail)
     (`((("foo" should) not) respondToSelector:"isAbsolutePath") should:fail)
   ))
+  
+  ; (it "checks if the object responds to the given selector" (do ()
+  ;   (`(("foo" should) respondToSelector:"isAbsolutePath") should:succeed)
+  ;   (`((("foo" should) not) respondToSelector:"noWay") should:succeed)
+  ;   (`(("foo" should) respondToSelector:"noWay") should:fail)
+  ;   (`((("foo" should) not) respondToSelector:"isAbsolutePath") should:fail)
+  ; ))
   
   (it "creates nice descriptions" (do ()
     (catch-failure ((((("foo" should) be:42)))))
