@@ -167,6 +167,7 @@
 (class BaconShould is NSObject
   (ivar (id) object
         (id) negated
+        (id) descriptionBuffer
   )
   
   (- (id) initWithObject:(id)object is
@@ -174,6 +175,7 @@
     ;; (puts (object description))
     (set @object object)
     (set @negated nil)
+    (set @descriptionBuffer "")
     self
   )
   
@@ -189,19 +191,29 @@
     (self satisfy:"satisfy the given block" block:block)
   )
   
-  (- (id) be is self)
-  (- (id) a is self)
-  (- (id) an is self)
+  (- (id) be is
+    (@descriptionBuffer appendString:" be")
+    self
+  )
   
-  (- (id) be:(id)value is
-    (self equal:value)
+  (- (id) a is
+    (@descriptionBuffer appendString:" a")
+    self
+  )
+  
+  (- (id) an is
+    (@descriptionBuffer appendString:" an")
+    self
   )
   
   (- (id) satisfy:(id)description block:(id)block is
     ($BaconSummary addRequirement)
+    (unless description
+      (set description "satisfy `#{block}'")
+    )
     (if (@negated)
-      (then (set d "expected `#{@object}' to not #{description}"))
-      (else (set d "expected `#{@object}' to #{description}"))
+      (then (set d "expected `#{@object}' to not#{@descriptionBuffer} #{description}"))
+      (else (set d "expected `#{@object}' to#{@descriptionBuffer} #{description}"))
     )
     (set result (block @object))
     ;(puts "result is: #{result}")
@@ -217,6 +229,12 @@
         )
       )
     )
+  )
+  
+  (- (id) be:(id)value is
+    (self satisfy:"be `#{value}'" block:(do (object)
+      (eq object value)
+    ))
   )
   
   (- (id) equal:(id)value is
@@ -261,20 +279,26 @@
   )
   
   (- (id) handleUnknownMessage:(id)methodName withContext:(id)context is
+    ; (puts methodName)
     (set name ((first methodName) stringValue))
+    (set args (cdr methodName))
+    (set description name)
+    (if (args) (then (set description "#{description}#{args}")))
     (if (@object respondsToSelector:name)
       (then
         ; forward the message as-is
-        (self satisfy:"be a #{name}" block:(do (object)
+        (self satisfy:description block:(do (object)
           (object sendMessage:methodName withContext:context)
         ))
       )
       (else
         (set predicate "is#{((name substringToIndex:1) uppercaseString)}#{(name substringFromIndex:1)}")
+        ; (puts @object)
         (if (@object respondsToSelector:predicate)
           (then
+            ; (puts predicate)
             ; forward the predicate version of the message with the args
-            (self satisfy:"be a #{name}" block:(do (object)
+            (self satisfy:description block:(do (object)
               (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
               (sendMessageWithSymbol object symbol (cdr methodName))
             ))
@@ -291,7 +315,7 @@
 
 (class NSObject
   (- (id) should is ((BaconShould alloc) initWithObject:self))
-  (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:"satisfy the given block" block:block))
+  (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
 
 ; TODO figure out for real how this actually works and why getting the symbol in the macro doesn't work

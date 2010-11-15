@@ -1,5 +1,16 @@
 (load "bacon.nu")
 
+(macro-1 catch-failure (block)
+  `(try
+    ,block
+    (catch (e)
+      (set failure e)
+    )
+  )
+)
+
+; (puts (macrox (catch-failure ((((("foo" should) be) an) absolutePath)))))
+
 ; Hooray for meta-testing.
 (set succeed
   (do (block)
@@ -47,10 +58,14 @@
   ))
   
   ; TODO probably does change the description of the requirement
-  (it "has `be', `a', and `an' syntactic sugar methods which do nothing but return the BaconShould instance" (do ()
+  (it "has `be', `a', and `an' syntactic sugar methods which add to the requirement description and returns the BaconShould instance" (do ()
+    (aRequirement setValue:"" forIvar:"descriptionBuffer")
     (((aRequirement be) should) equal:aRequirement)
+    (((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be")
     (((aRequirement a) should) equal:aRequirement)
+    (((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be a")
     (((aRequirement an) should) equal:aRequirement)
+    (((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be a an")
   ))
   
   ; TODO probably does change the description of the requirement
@@ -97,6 +112,29 @@
     (`((("foo" should) not) respondToSelector:"noWay") should:succeed)
     (`(("foo" should) respondToSelector:"noWay") should:fail)
     (`((("foo" should) not) respondToSelector:"isAbsolutePath") should:fail)
+  ))
+  
+  (it "creates nice descriptions" (do ()
+    (catch-failure ((((("foo" should) be:42)))))
+    (((failure reason) should) equal:"expected `foo' to be `42'")
+    
+    (catch-failure ((((("foo" should) not) equal:"foo"))))
+    (((failure reason) should) equal:"expected `foo' to not equal `foo'")
+    
+    (catch-failure ((((("foo" should) be) isEqualToString:"bar"))))
+    (((failure reason) should) equal:"expected `foo' to be isEqualToString:(\"bar\")")
+    
+    (catch-failure (((("foo" should) equalToString:"bar"))))
+    (((failure reason) should) equal:"expected `foo' to equalToString:(\"bar\")")
+    
+    (catch-failure ((((("foo" should) be) an) absolutePath)))
+    (((failure reason) should) equal:"expected `foo' to be an absolutePath")
+    
+    (catch-failure ((((("foo" should) satisfy:nil block:(do (x) (eq x "bar")))))))
+    (((failure reason) should) equal:"expected `foo' to satisfy `(do (x) ((eq x \"bar\")))'")
+    
+    (catch-failure ((((("foo" should:(do (x) (eq x "bar"))))))))
+    (((failure reason) should) equal:"expected `foo' to satisfy `(do (x) ((eq x \"bar\")))'")
   ))
 ))
 
