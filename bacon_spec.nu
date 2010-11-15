@@ -79,6 +79,13 @@
     ((("foo" should) not) equal:"bar")
   ))
   
+  (it "checks if the number is close to a given number" (do ()
+    (`(((1.4 should) be) closeTo:1.4) should:succeed)
+    (`(((0.4 should) be) closeTo:0.5 delta:0.1) should:succeed)
+    (`(((0.4 should) be) closeTo:0.5) should:fail)
+    (`(((0.4 should) be) closeTo:0.5 delta:0.05) should:fail)
+  ))
+  
   (it "checks if any exception is raised" (do ()
     ((rangeException should) raise)
     (((`("foo") should) not) raise)
@@ -113,13 +120,6 @@
     (`(("foo" should) respondToSelector:"noWay") should:fail)
     (`((("foo" should) not) respondToSelector:"isAbsolutePath") should:fail)
   ))
-  
-  ; (it "checks if the object responds to the given selector" (do ()
-  ;   (`(("foo" should) respondToSelector:"isAbsolutePath") should:succeed)
-  ;   (`((("foo" should) not) respondToSelector:"noWay") should:succeed)
-  ;   (`(("foo" should) respondToSelector:"noWay") should:fail)
-  ;   (`((("foo" should) not) respondToSelector:"isAbsolutePath") should:fail)
-  ; ))
   
   (it "creates nice descriptions" (do ()
     (catch-failure ((((("foo" should) be:42)))))

@@ -236,6 +236,16 @@
     ))
   )
   
+  (- (id) closeTo:(id)otherValue is
+    (self closeTo:otherValue delta:0.00001)
+  )
+  
+  (- (id) closeTo:(id)otherValue delta:(id)delta is
+    (self satisfy:"be close to `#{otherValue}'" block:(do (value)
+      (and (>= otherValue (- value delta)) (<= otherValue (+ value delta)))
+    ))
+  )
+  
   (- (id) raise is
     (set result nil)
     (self satisfy:"raise any exception" block:(do (object)
