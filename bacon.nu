@@ -172,7 +172,6 @@
   
   (- (id) initWithObject:(id)object is
     (self init) ;; TODO check if it's nil
-    ;; (puts (object description))
     (set @object object)
     (set @negated nil)
     (set @descriptionBuffer "")
@@ -180,15 +179,15 @@
   )
   
   (- (id) not is
-    ;(puts "called not")
     (set @negated t)
+    (@descriptionBuffer appendString:" not")
     self
   )
   
   (- (id) not:(id)block is
-    ;(puts "called not:")
     (set @negated t)
-    (self satisfy:"satisfy the given block" block:block)
+    (@descriptionBuffer appendString:" not")
+    (self satisfy:nil block:block)
   )
   
   (- (id) be is
@@ -208,24 +207,18 @@
   
   (- (id) satisfy:(id)description block:(id)block is
     ($BaconSummary addRequirement)
-    (unless description
-      (set description "satisfy `#{block}'")
-    )
-    (if (@negated)
-      (then (set d "expected `#{@object}' to not#{@descriptionBuffer} #{description}"))
-      (else (set d "expected `#{@object}' to#{@descriptionBuffer} #{description}"))
-    )
+    (unless description (set description "satisfy `#{block}'"))
+    (set description "expected `#{@object}' to#{@descriptionBuffer} #{description}")
     (set result (block @object))
-    ;(puts "result is: #{result}")
     (if (result)
       (then
         (if (@negated)
-          (throw ((BaconError alloc) initWithDescription:d))
+          (throw ((BaconError alloc) initWithDescription:description))
         )
       )
       (else
         (unless (@negated)
-          (throw ((BaconError alloc) initWithDescription:d))
+          (throw ((BaconError alloc) initWithDescription:description))
         )
       )
     )

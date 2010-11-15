@@ -135,6 +135,9 @@
     
     (catch-failure ((((("foo" should:(do (x) (eq x "bar"))))))))
     (((failure reason) should) equal:"expected `foo' to satisfy `(do (x) ((eq x \"bar\")))'")
+    
+    (catch-failure ((((("foo" should) not:(do (x) (eq x "foo")))))))
+    (((failure reason) should) equal:"expected `foo' to not satisfy `(do (x) ((eq x \"foo\")))'")
   ))
 ))
 
