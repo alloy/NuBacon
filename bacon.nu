@@ -60,7 +60,7 @@
 
 (set $BaconSummary ((BaconSummary alloc) init))
 
-(class Context is NSObject
+(class BaconContext is NSObject
   ; use the dynamic `ivars' so the user can add ivars in before/after
   (ivars (id) name
          (id) before
@@ -79,7 +79,7 @@
   )
   
   (- (id) childContextWithName:(id)childName requirements:(id)requirements is
-    (set child ((Context alloc) initWithName:"#{@name} #{childName}" requirements:requirements))
+    (set child ((BaconContext alloc) initWithName:"#{@name} #{childName}" requirements:requirements))
     ((@before list) each: (do (x) (child before:x)))
     ((@after list) each: (do (x) (child after:x)))
     child
@@ -164,7 +164,7 @@
   (- (id) reason is @description)
 )
 
-(class Should is NSObject
+(class BaconShould is NSObject
   (ivar (id) object
         (id) negated
   )
@@ -290,8 +290,8 @@
 )
 
 (class NSObject
-  (- (id) should is ((Should alloc) initWithObject:self))
-  (- (id) should:(id)block is (((Should alloc) initWithObject:self) satisfy:"satisfy the given block" block:block))
+  (- (id) should is ((BaconShould alloc) initWithObject:self))
+  (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:"satisfy the given block" block:block))
 )
 
 ; TODO figure out for real how this actually works and why getting the symbol in the macro doesn't work
@@ -310,7 +310,7 @@
       (if (eq (e reason) "undefined symbol self while evaluating expression (set parent self)")
         (then
           ; not running inside a context
-          (((Context alloc) initWithName:__name requirements:__requirements) run)
+          (((BaconContext alloc) initWithName:__name requirements:__requirements) run)
         )
         ; another type of exception occured
         (else (throw e))

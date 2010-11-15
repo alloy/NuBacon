@@ -21,7 +21,7 @@
 (set aRequirement ("foo" should))
 (set rangeException `((NSArray array) objectAtIndex:0))
 
-(describe "An instance of Should" `(
+(describe "An instance of BaconShould" `(
   (it "raises a BaconError if the assertion fails" (do ()
     (`(("foo" should) equal:"bar") should:fail)
   ))
@@ -47,7 +47,7 @@
   ))
   
   ; TODO probably does change the description of the requirement
-  (it "has `be', `a', and `an' syntactic sugar methods which do nothing but return the Should instance" (do ()
+  (it "has `be', `a', and `an' syntactic sugar methods which do nothing but return the BaconShould instance" (do ()
     (((aRequirement be) should) equal:aRequirement)
     (((aRequirement a) should) equal:aRequirement)
     (((aRequirement an) should) equal:aRequirement)
@@ -101,7 +101,7 @@
 ))
 
 (describe "NSObject, concerning Bacon extensions" `(
-  (it "returns a Should instance, wrapping that object" (do ()
+  (it "returns a BaconShould instance, wrapping that object" (do ()
     (("foo" should) equal:"foo")
   ))
   
