@@ -209,8 +209,8 @@
     ($BaconSummary addRequirement)
     (unless description (set description "satisfy `#{block}'"))
     (set description "expected `#{@object}' to#{@descriptionBuffer} #{description}")
-    (set result (block @object))
-    (if (result)
+    (set passed (block @object))
+    (if (passed)
       (then
         (if (@negated)
           (throw ((BaconError alloc) initWithDescription:description))
@@ -272,7 +272,6 @@
   )
   
   (- (id) handleUnknownMessage:(id)methodName withContext:(id)context is
-    ; (puts methodName)
     (set name ((first methodName) stringValue))
     (set args (cdr methodName))
     (set description name)
@@ -286,10 +285,8 @@
       )
       (else
         (set predicate "is#{((name substringToIndex:1) uppercaseString)}#{(name substringFromIndex:1)}")
-        ; (puts @object)
         (if (@object respondsToSelector:predicate)
           (then
-            ; (puts predicate)
             ; forward the predicate version of the message with the args
             (self satisfy:description block:(do (object)
               (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
