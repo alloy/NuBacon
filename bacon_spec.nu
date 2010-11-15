@@ -125,6 +125,9 @@
     (catch-failure ((((("foo" should) be:42)))))
     (((failure reason) should) equal:"expected `foo' to be `42'")
     
+    (catch-failure ((((((0.4 should) be) closeTo:42)))))
+    (((failure reason) should) equal:"expected `0.4' to be close to `42'")
+    
     (catch-failure ((((("foo" should) not) equal:"foo"))))
     (((failure reason) should) equal:"expected `foo' to not equal `foo'")
     

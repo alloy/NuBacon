@@ -241,7 +241,7 @@
   )
   
   (- (id) closeTo:(id)otherValue delta:(id)delta is
-    (self satisfy:"be close to `#{otherValue}'" block:(do (value)
+    (self satisfy:"close to `#{otherValue}'" block:(do (value)
       (and (>= otherValue (- value delta)) (<= otherValue (+ value delta)))
     ))
   )
