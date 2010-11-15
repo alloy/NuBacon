@@ -78,8 +78,8 @@
   
   (- (id) childContextWithName:(id)childName requirements:(id)requirements is
     (set child ((Context alloc) initWithName:"#{@name} #{childName}" requirements:requirements))
-    (@before each: (do (x) (child before:x)))
-    (@after each: (do (x) (child after:x)))
+    ((@before list) each: (do (x) (child before:x)))
+    ((@after list) each: (do (x) (child after:x)))
     child
   )
   
@@ -105,7 +105,7 @@
     
     (try
       (try ; wrap before/requirement/after
-        (@before each: (do (x) (eval x)))
+        ((@before list) each: (do (x) (eval x)))
         (eval block)
         (catch (e)
           ; don't allow after filters to throw, as it could result in an endless loop
@@ -138,7 +138,7 @@
   
   (- (id) runAfterFilterAndThrow:(id)shouldThrow is
     (try
-      (@after each: (do (x) (eval x)))
+      ((@after list) each: (do (x) (eval x)))
       (catch (e)
         (if (shouldThrow) (throw e))
       )
