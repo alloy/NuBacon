@@ -85,6 +85,12 @@
     (`(((0.4 should) be) closeTo:0.5) should:fail)
     (`(((0.4 should) be) closeTo:0.5 delta:0.05) should:fail)
   ))
+
+  (it "checks if the numbers in the list are close to the list of given numbers" (do ()
+    (`(((`(1.4 2.5 3.6 4.7) should) be) closeTo:`(1.4 2.5 3.6 4.7)) should:succeed)
+    (`(((`(1.4 2.5 3.6 4.7) should) be) closeTo:`(1.4 2.6 3.6 4.7)) should:fail)
+    (`(((`(1.4 2.5 3.6 4.7) should) be) closeTo:`(1.4 2.6 3.6 4.7) delta:0.1) should:succeed)
+  ))
   
   (it "checks if any exception is raised" (do ()
     ((rangeException should) raise)

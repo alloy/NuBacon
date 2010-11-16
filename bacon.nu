@@ -241,9 +241,24 @@
   )
   
   (- (id) closeTo:(id)otherValue delta:(id)delta is
-    (self satisfy:"close to `#{otherValue}'" block:(do (value)
-      (and (>= otherValue (- value delta)) (<= otherValue (+ value delta)))
-    ))
+    (if (eq (otherValue class) NuCell)
+      (then
+        (set otherValues (otherValue array))
+        (self satisfy:"close to `#{otherValue}'" block:(do (values)
+          (set result t)
+          (values eachWithIndex:(do (value index)
+            (set otherValue (otherValues objectAtIndex:index))
+            (set result (and result (and (>= otherValue (- value delta)) (<= otherValue (+ value delta)))))
+          ))
+          result
+        ))
+      )
+      (else
+        (self satisfy:"close to `#{otherValue}'" block:(do (value)
+          (and (>= otherValue (- value delta)) (<= otherValue (+ value delta)))
+        ))
+      )
+    )
   )
   
   (- (id) raise is
