@@ -165,21 +165,21 @@
 ))
 
 (describe "before/after" `(
-  (before "each" (do ()
+  (before (do ()
     (set @a 1)
     (set @b 2)
   ))
   
-  (before "each" (do ()
+  (before (do ()
     (set @a 2)
   ))
   
-  (after "each" (do ()
+  (after (do ()
     ((@a should) equal:2)
     (set @a 3)
   ))
   
-  (after "each" (do ()
+  (after (do ()
     ((@a should) equal:3)
   ))
   
@@ -189,7 +189,7 @@
   ))
   
   (describe "when nested" `(
-    (before "each" (do ()
+    (before (do ()
       (set @c 5)
     ))
     
@@ -202,7 +202,7 @@
       ((@c should) equal:5)
     ))
     
-    (before "each" (do ()
+    (before (do ()
       (set @a 5)
     ))
     
@@ -245,7 +245,7 @@
   
   (behaves_like "a shared context")
   
-  (before "each" (do ()
+  (before (do ()
     (set @magic 42)
   ))
   

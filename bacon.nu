@@ -361,14 +361,10 @@
 
 ; TODO for some reason this only works if the macro accepts an arg like string, before the block.
 (macro-0 before
-  (set __when (car margs))
-  (set __block (cdr margs))
-  (self before:__block)
+  (self before:margs)
 )
 (macro-0 after
-  (set __when (car margs))
-  (set __block (cdr margs))
-  (self after:__block)
+  (self after:margs)
 )
 
 ; shared contexts
