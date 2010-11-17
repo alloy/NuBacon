@@ -57,7 +57,6 @@
     ((("foo" should) not) equal:"bar")
   ))
   
-  ; TODO probably does change the description of the requirement
   (it "has `be', `a', and `an' syntactic sugar methods which add to the requirement description and returns the BaconShould instance" (do ()
     (aRequirement setValue:"" forIvar:"descriptionBuffer")
     (((aRequirement be) should) equal:aRequirement)
@@ -68,7 +67,6 @@
     (((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be a an")
   ))
   
-  ; TODO probably does change the description of the requirement
   (it "has a `be:' syntactic sugar method which checks for equality" (do ()
     (`(aRequirement be:"foo") should:succeed)
     (`(aRequirement be:"bar") should:fail)
@@ -257,5 +255,38 @@
   
   (behaves_like "another shared context")
 ))
+
+;(describe "Regression specs" `(
+  ;(before (do ()
+    ;(set @a 42)
+  ;))
+
+  ;(describe "from a nested context" `(
+    ;(before (do ()
+      ;(set @b 42)
+    ;))
+
+    ;(describe "from a nested-nested context" `(
+      ;(before (do ()
+        ;(set @c 42)
+      ;))
+
+      ;(it "catches from any depth" (do ()
+        ;;(set requirement `(self requirement:"catches from any depth" block:`(
+          ;(set values `((1 (-1.23 -2.34)) (2 (-2.34 -3.45))))
+          ;(values each:(do (x)
+            ;(set a (x array))
+            ;(set value (a objectAtIndex:0))
+            ;(set valueList (a objectAtIndex:1))
+            ;;(puts value)
+            ;;(puts valueList)
+            ;(((valueList should) be) closeTo:`(-1.23 -2.34)) ; this fails at the second value
+          ;))
+        ;;) report:nil))
+        ;;((((eval requirement) should) not) raise)
+      ;))
+    ;))
+  ;))
+;))
 
 ($BaconSummary print)
