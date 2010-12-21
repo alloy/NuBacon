@@ -6,7 +6,9 @@ NuBacon -- small RSpec clone
 
 NuBacon is a [Nu][nu] port of [Bacon][ba], a small [Ruby RSpec][rs] clone.
 
-It is a [Behavior-Driven Development][bdd] test library.
+It is a [Behavior-Driven Development][bdd] test library for Nu and in
+extension for Objective-C. It is being developed while using in our iOS
+application, more on that will be announced.
 
 
 Whirl-wind tour
