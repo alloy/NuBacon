@@ -1,5 +1,5 @@
 NuBacon -- small RSpec clone
-----------------------------
+============================
 
     "Truth will sooner come out from error than from confusion."
                                                ---Francis Bacon
@@ -140,6 +140,8 @@ Thanks to
 Contributing
 ------------
 
+There's still plenty to do, see the [TODO][td] for things that need to be done.
+
 Once you've made your great commits:
 
 1. [Fork][fk] NuBacon
@@ -164,4 +166,5 @@ See [LICENSE][li] or http://www.opensource.org/licenses/mit-license.php.
 [fk]:  http://help.github.com/forking
 [is]:  https://github.com/alloy/NuBacon/issues
 [li]:  https://github.com/alloy/NuBacon/blob/master/LICENSE
+[td]:  https://github.com/alloy/NuBacon/blob/master/TODO
 [cn]:  http://chneukirchen.org
