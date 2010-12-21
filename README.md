@@ -11,6 +11,24 @@ extension for Objective-C. It is being developed while using in our iOS
 application, more on that will be announced.
 
 
+Installation
+------------
+
+There's currently no Nu specific package manager, so you will have to
+grab the source directly:
+
+As a zip archive:
+
+    $ curl https://github.com/alloy/NuBacon/zipball/0.1 -o NuBacon-0.1.zip
+    $ unzip NuBacon-0.1.zip
+
+Or as a git clone:
+
+    $ git clone git@github.com:alloy/NuBacon.git
+    $ cd NuBacon
+    $ git checkout 0.1
+
+
 Whirl-wind tour
 ---------------
 
