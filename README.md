@@ -1,10 +1,10 @@
 NuBacon -- small RSpec clone
 ----------------------------
 
-   "Truth will sooner come out from error than from confusion."
+    "Truth will sooner come out from error than from confusion."
                                                ---Francis Bacon
 
-NuBacon is a Nu port of Bacon, a small [Ruby RSpec][rs] clone.
+NuBacon is a [Nu][nu] port of [Bacon][ba], a small [Ruby RSpec][rs] clone.
 
 It is a [Behavior-Driven Development][bdd] test library.
 
@@ -134,7 +134,7 @@ structure suites with many recurring specifications.
 Thanks to
 ---------
 
-* Christian Neukirchen, and other contributors, for Bacon itself!
+* [Christian Neukirchen][cn], and other contributors, for Bacon itself!
 
 
 Contributing
@@ -155,10 +155,13 @@ LICENSE
 Copyright (C) 2010 Eloy Durán <eloy.de.enige@gmail.com>, Fingertips BV <fngtps.com>
 
 NuBacon is freely distributable under the terms of an MIT-style license.
-See LICENSE or http://www.opensource.org/licenses/mit-license.php.
+See [LICENSE][li] or http://www.opensource.org/licenses/mit-license.php.
 
-
-[rs]:  http://rspec.rubyforge.org/
-[bdd]: http://behaviour-driven.org/
-[fk]:  http://help.github.com/forking/
+[nu]:  https://github.com/timburks/nu
+[ba]:  https://github.com/chneukirchen/bacon
+[rs]:  http://rspec.rubyforge.org
+[bdd]: http://behaviour-driven.org
+[fk]:  http://help.github.com/forking
 [is]:  https://github.com/alloy/NuBacon/issues
+[li]:  https://github.com/alloy/NuBacon/blob/master/LICENSE
+[cn]:  http://chneukirchen.org
