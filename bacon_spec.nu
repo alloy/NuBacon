@@ -72,6 +72,11 @@
     (`(aRequirement be:"bar") should:fail)
   ))
   
+  (it "has a `a:' syntactic sugar method which checks for equality" (do ()
+    (`(aRequirement a:"foo") should:succeed)
+    (`(aRequirement a:"bar") should:fail)
+  ))
+  
   (it "checks for equality" (do ()
     (("foo" should) equal:"foo")
     ((("foo" should) not) equal:"bar")

@@ -1,5 +1,4 @@
-* Add Should-a: which takes a block
-* Make Should-be: take a block and pass it on to satisfy:block:
+* Make Should-be: and a: take a block and pass it on to satisfy:block:
 * Add Should-flunk and make an empty specification flunk
 * Add Should-match which matches a string with a regexp
 * Add Should-change which checks that the value increases after executing the block

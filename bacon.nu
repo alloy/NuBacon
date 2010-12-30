@@ -230,6 +230,12 @@
     ))
   )
   
+  (- (id) a:(id)value is
+    (self satisfy:"a `#{value}'" block:(do (object)
+      (eq object value)
+    ))
+  )
+  
   (- (id) equal:(id)value is
     (self satisfy:"equal `#{value}'" block:(do (object)
       (eq object value)
