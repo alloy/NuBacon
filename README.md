@@ -53,7 +53,8 @@ Whirl-wind tour
       ))
 
       (it "raises when trying to fetch an element" (do ()
-        (((-> (@ary objectAtIndex:0)) should) raise:"NSRangeException")
+        (set exception (((-> (@ary objectAtIndex:0)) should) raise:"NSRangeException"))
+        (((exception reason) should) match:/beyond bounds/)
       ))
 
       (it "compares to another object" (do ()
@@ -61,6 +62,10 @@ Whirl-wind tour
         ((@ary should) equal:@ary)
         (((@otherArray should) not) be:@ary)
         (((@otherArray should) not) equal:@ary)
+      ))
+
+      (it "changes the count when adding objects" (do ()
+        (((-> (@otherArray << "soup")) should) change:(do () (@otherArray count)) by:+1)
       ))
 
       ; Custom assertions are trivial to do, they are blocks returning
@@ -86,22 +91,29 @@ Now run it:
     - has zero elements
     - raises when trying to fetch an element
     - compares to another object
+    - changes the count when adding objects
     - uses a custom assertion to check if the array is empty
     - has super powers [FAILURE]
 
     An array - has super powers: flunked [FAILURE]
 
-    6 specifications (11 requirements), 1 failures, 0 errors
+    7 specifications (13 requirements), 1 failures, 0 errors
 
 Implemented assertions
 ----------------------
 
 * should:<predicate>
+* should be:object
+* should (be) a:object
 * should equal:object
 * should closeTo:<float | list of floats>
 * should closeTo:<float | list of floats> delta:float
+* should match:regexp
+* should change:valueBlock
+* should change:valueBlock by:delta
 * should raise
 * should raise:exceptionName
+* should <dynamic predicate message matching>
 * should satisfy:message block:block
 
 

@@ -1,5 +1,3 @@
-* Add Should-change which checks that the value increases after executing the block
-* Update README examples with match and change.
 * Maybe make Should-not return a ShouldNot instance, so that the state of the original Should instance ins't negated? But this is mainly useful for meta-testing, like testing Bacon itself.
 * From Tim Burks: it would be nice to have "should" be more like CL's "loop" macro, so that you could write "(@otherArray should not equal @ary)" instead of "(((@otherArray should) not) equal:@ary)"
 * Make Should-satisfy:block: use the body of the block if @object is a block.
