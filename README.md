@@ -34,7 +34,7 @@ Whirl-wind tour
 
     (load "bacon")
 
-    (set emptyArray (do (object) (eq (object count) 0)))
+    (set emptyArray (do (array) (eq (array count) 0)))
 
     (describe "An array" `(
       (before (do ()
