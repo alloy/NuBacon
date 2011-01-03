@@ -34,7 +34,7 @@ Whirl-wind tour
 
     (load "bacon")
 
-    (set beEmptyArray (do (object) (eq (object count) 0)))
+    (set emptyArray (do (object) (eq (object count) 0)))
 
     (describe "An array" `(
       (before (do ()
@@ -66,8 +66,8 @@ Whirl-wind tour
       ; Custom assertions are trivial to do, they are blocks returning
       ; a boolean value. The block is defined at the top.
       (it "uses a custom assertion to check if the array is empty" (do ()
-        (@ary should:beEmptyArray)
-        (((@otherArray) should) not:beEmptyArray)
+        (((@ary should) be) a:emptyArray)
+        (((((@otherArray) should) not) be) a:emptyArray)
       ))
 
       (it "has super powers" (do ()
