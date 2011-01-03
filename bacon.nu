@@ -299,6 +299,12 @@
     )
   )
   
+  (- (id) match:(id)regexp is
+    (self satisfy:"match /#{(regexp pattern)}/" block:(do (string)
+      (regexp findInString:string)
+    ))
+  )
+  
   (- (id) raise is
     (set result nil)
     (self satisfy:"raise any exception" block:(do (block)

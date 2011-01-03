@@ -14,7 +14,6 @@
 ; Hooray for meta-testing.
 (set succeed
   (do (block)
-    ;(puts block)
     (((send block should) not) raise:"BaconError")
     t
   )
@@ -105,11 +104,16 @@
     ((-> (((0.4 should) be) closeTo:0.5)) should:fail)
     ((-> (((0.4 should) be) closeTo:0.5 delta:0.05)) should:fail)
   ))
-
+  
   (it "checks if the numbers in the list are close to the list of given numbers" (do ()
     ((-> (((`(1.4 2.5 3.6 4.7) should) be) closeTo:`(1.4 2.5 3.6 4.7))) should:succeed)
     ((-> (((`(1.4 2.5 3.6 4.7) should) be) closeTo:`(1.4 2.6 3.6 4.7))) should:fail)
     ((-> (((`(1.4 2.5 3.6 4.7) should) be) closeTo:`(1.4 2.6 3.6 4.7) delta:0.1)) should:succeed)
+  ))
+  
+  (it "checks if the string matches the given regexp" (do ()
+    ((-> (("string" should) match:/strin./)) should:succeed)
+    ((-> (("string" should) match:/slin./)) should:fail)
   ))
   
   (it "checks if any exception is raised" (do ()
@@ -157,6 +161,9 @@
     
     (catch-failure ((((("foo" should) not) equal:"foo"))))
     (((failure reason) should) equal:"expected `foo' to not equal `foo'")
+    
+    (catch-failure ((((("foo" should) match:/slin./)))))
+    (((failure reason) should) equal:"expected `foo' to match /slin./")
     
     (catch-failure ((((("foo" should) be) isEqualToString:"bar"))))
     (((failure reason) should) equal:"expected `foo' to be isEqualToString:(\"bar\")")
