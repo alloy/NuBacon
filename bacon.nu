@@ -305,6 +305,22 @@
     ))
   )
   
+  (- (id) change:(id)valueBlock by:(id)delta is
+    (self satisfy:"change `#{(send valueBlock body)}' by `#{delta}'" block:(do (changeBlock)
+      (set before (call valueBlock))
+      (call changeBlock)
+      (eq (+ before delta) (call valueBlock))
+    ))
+  )
+  
+  (- (id) change:(id)valueBlock is
+    (self satisfy:"change `#{(send valueBlock body)}'" block:(do (changeBlock)
+      (set before (call valueBlock))
+      (call changeBlock)
+      (not (eq before (call valueBlock)))
+    ))
+  )
+  
   (- (id) raise is
     (set result nil)
     (self satisfy:"raise any exception" block:(do (block)

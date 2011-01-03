@@ -118,6 +118,26 @@
     ((-> ((("string" should) not) match:/strin./)) should:fail)
   ))
   
+  (it "checks if after executing a block a numeric value has changed at all" (do ()
+    (set x 0)
+    (set valueBlock (do () x))
+    ((-> (((-> (set x (+ x 1))) should) change:valueBlock)) should:succeed)
+    ((-> (((-> (set x x)) should) change:valueBlock)) should:fail)
+    ((-> ((((-> (set x x)) should) not) change:valueBlock)) should:succeed)
+    ((-> ((((-> (set x (+ x 1))) should) not) change:valueBlock)) should:fail)
+  ))
+  
+  (it "checks if after executing a block a numeric value has changed by a given delta" (do ()
+    (set x 0)
+    (set valueBlock (do () x))
+    ((-> (((-> (set x (+ x 1))) should) change:valueBlock by:+1)) should:succeed)
+    ((-> (((-> (set x (+ x 2))) should) change:valueBlock by:+1)) should:fail)
+    ((-> (((-> (set x (- x 1))) should) change:valueBlock by:-1)) should:succeed)
+    ((-> (((-> (set x (- x 2))) should) change:valueBlock by:-1)) should:fail)
+    ((-> ((((-> (set x (+ x 1))) should) not) change:valueBlock by:-1)) should:succeed)
+    ((-> ((((-> (set x (+ x 1))) should) not) change:valueBlock by:+1)) should:fail)
+  ))
+  
   (it "checks if any exception is raised" (do ()
     ((rangeException should) raise)
     ((((-> ("foo")) should) not) raise)
@@ -166,6 +186,13 @@
     
     (catch-failure ((((("foo" should) match:/slin./)))))
     (((failure reason) should) equal:"expected `foo' to match /slin./")
+    
+    (set x 0)
+    (set valueBlock (do () x))
+    (catch-failure ((((((-> (set x x)) should) change:valueBlock)))))
+    (((failure reason) should) equal:"expected `(do () ((set x x)))' to change `(x)'")
+    (catch-failure ((((((-> (set x x)) should) change:valueBlock by:-1)))))
+    (((failure reason) should) equal:"expected `(do () ((set x x)))' to change `(x)' by `-1'")
     
     (catch-failure ((((("foo" should) be) isEqualToString:"bar"))))
     (((failure reason) should) equal:"expected `foo' to be isEqualToString:(\"bar\")")
