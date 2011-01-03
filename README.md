@@ -70,10 +70,9 @@ Whirl-wind tour
         (((@otherArray) should) not:beEmptyArray)
       ))
 
-      ; TODO
-      ;it 'should have super powers' do
-        ;should.flunk "no super powers found"
-      ;end
+      (it "has super powers" (do ()
+        ; flunks when it contains no assertions
+      ))
     ))
 
     ($BaconSummary print)
@@ -88,8 +87,11 @@ Now run it:
     - raises when trying to fetch an element
     - compares to another object
     - uses a custom assertion to check if the array is empty
+    - has super powers [FAILURE]
 
-    5 specifications (11 requirements), 0 failures, 0 errors
+    An array - has super powers: flunked [FAILURE]
+
+    6 specifications (11 requirements), 1 failures, 0 errors
 
 Implemented assertions
 ----------------------

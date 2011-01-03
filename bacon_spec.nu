@@ -46,6 +46,13 @@
     ((((-> (self requirement:"throws" block:`(throw "ohnoes") report:nil)) should) not) raise)
   ))
   
+  (it "flunks a requirement if it contains no assertions" (do ()
+    (set numberOfFailuresBefore ($BaconSummary failures))
+    (self requirement:"flunks" block:`() report:t)
+    ((($BaconSummary failures) should) equal:(+ numberOfFailuresBefore 1))
+    (($BaconSummary valueForIvar:"counters") setValue:numberOfFailuresBefore forKey:"failures")
+  ))
+  
   (it "checks if the given block satisfies" (do ()
     ((-> (("foo" should) satisfy:"pass" block:equalFoo)) should:succeed)
     ((-> (("foo" should) satisfy:"fail" block:equalBar)) should:fail)

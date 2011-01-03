@@ -107,10 +107,16 @@
       (print "- #{description}")
     )
     
+    (set numberOfRequirementsBefore ($BaconSummary requirements))
+    
     (try
       (try ; wrap before/requirement/after
         ((@before list) each: (do (x) (eval x)))
         (eval block)
+        (if (eq numberOfRequirementsBefore ($BaconSummary requirements))
+          ; the requirement did not contain any assertions, so it flunked
+          (throw ((BaconError alloc) initWithDescription:"flunked"))
+        )
         (catch (e)
           ; don't allow after filters to throw, as it could result in an endless loop
           (self runAfterFilterAndThrow:nil)
