@@ -14,7 +14,7 @@
 ; Hooray for meta-testing.
 (set succeed
   (do (block)
-    (((block should) not) raise:"BaconError")
+    ((((-> block) should) not) raise:"BaconError")
     t
   )
 )
@@ -34,7 +34,7 @@
 
 (describe "An instance of BaconShould" `(
   (it "raises a BaconError if the assertion fails" (do ()
-    (`(("foo" should) equal:"bar") should:fail)
+    ((-> (("foo" should) equal:"bar")) should:fail)
   ))
   
   (it "does not raise an exception if the assertion passes" (do ()
@@ -57,20 +57,26 @@
     ((("foo" should) not) equal:"bar")
   ))
   
-  (it "has `be', `a', and `an' syntactic sugar methods which add to the requirement description and returns the BaconShould instance" (do ()
-    (aRequirement setValue:"" forIvar:"descriptionBuffer")
-    (((aRequirement be) should) equal:aRequirement)
-    (((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be")
-    (((aRequirement a) should) equal:aRequirement)
-    (((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be a")
-    (((aRequirement an) should) equal:aRequirement)
-    (((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be a an")
-  ))
+  ;(it "has `be', `a', and `an' syntactic sugar methods which add to the requirement description and return the BaconShould instance" (do ()
+    ;(aRequirement setValue:"" forIvar:"descriptionBuffer")
+    ;(((aRequirement be) should) equal:aRequirement)
+    ;(((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be")
+    ;(((aRequirement a) should) equal:aRequirement)
+    ;(((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be a")
+    ;(((aRequirement an) should) equal:aRequirement)
+    ;(((aRequirement valueForIvar:"descriptionBuffer") should) equal:" be a an")
+  ;))
   
   (it "has a `be:' syntactic sugar method which checks for equality" (do ()
-    (`(aRequirement be:"foo") should:succeed)
-    (`(aRequirement be:"bar") should:fail)
+    ((-> (aRequirement be:"foo")) should:succeed)
+    ((-> (aRequirement be:"bar")) should:fail)
   ))
+  
+  ;(it "has a `be:' syntactic sugar method which takes a block which is passed to satisfy:block:" (do ()
+    ;(`(aRequirement be:(do (_) "foo")) should:succeed)
+    ;(`(aRequirement be:(do (_) "bar"):tabprevious
+;) should:fail)
+  ;))
   
   (it "has a `a:' syntactic sugar method which checks for equality" (do ()
     (`(aRequirement a:"foo") should:succeed)

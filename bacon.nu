@@ -178,6 +178,16 @@
     self
   )
   
+  (- (id) should is
+    self
+  )
+  
+  (- (id) should:(id)block is
+    (puts @object)
+    (self satisfy:nil block:block)
+  )
+  
+  
   (- (id) not is
     (set @negated t)
     (@descriptionBuffer appendString:" not")
@@ -348,6 +358,27 @@
   (- (id) should is ((BaconShould alloc) initWithObject:self))
   (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
+
+(macro-0 ->
+  (puts margs)
+)
+
+;(macro-1 -> (*body)
+  ;(puts (car *body))
+  ;(puts (send (car *body) class))
+  ;(if (eq (send *body class) NuBlock)
+    ;(then
+      ;(puts "Is a block!")
+      ;(puts *body)
+      ;(send *body should)
+    ;)
+    ;(else
+      ;(puts "NOT a block!")
+      ;`((BaconShould alloc) initWithObject:(do () ,@*body))
+    ;)
+  ;)
+  ;;`((BaconShould alloc) initWithObject:(do () ,@body))
+;)
 
 ; TODO figure out for real how this actually works and why getting the symbol in the macro doesn't work
 ; (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
