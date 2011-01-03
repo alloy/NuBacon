@@ -1,6 +1,6 @@
-* Make Should-be: and a: take a block and pass it on to satisfy:block:
 * Add Should-flunk and make an empty specification flunk
 * Add Should-match which matches a string with a regexp
 * Add Should-change which checks that the value increases after executing the block
-* Make (((do () (@ary objectAtIndex:0)) should) raise:"NSRangeException") work, so that is without quoting the list
+* Maybe make Should-not return a ShouldNot instance, so that the state of the original Should instance ins't negated?
+  But this is mainly useful for meta-testing, like testing Bacon itself.
 * Execute the specs in a runloop and add the ability to delay the execution of assertions. So something like a `wait(seconds)' function

@@ -178,15 +178,17 @@
     self
   )
   
+  (- (id) object is
+    @object
+  )
+  
   (- (id) should is
     self
   )
   
   (- (id) should:(id)block is
-    (puts @object)
     (self satisfy:nil block:block)
   )
-  
   
   (- (id) not is
     (set @negated t)
@@ -235,15 +237,29 @@
   )
   
   (- (id) be:(id)value is
-    (self satisfy:"be `#{value}'" block:(do (object)
-      (eq object value)
-    ))
+    (if (send value isKindOfClass:NuBlock)
+      (then
+        (self satisfy:"be `#{value}'" block:value)
+      )
+      (else
+        (self satisfy:"be `#{value}'" block:(do (object)
+          (eq object value)
+        ))
+      )
+    )
   )
   
   (- (id) a:(id)value is
-    (self satisfy:"a `#{value}'" block:(do (object)
-      (eq object value)
-    ))
+    (if (send value isKindOfClass:NuBlock)
+      (then
+        (self satisfy:"a `#{value}'" block:value)
+      )
+      (else
+        (self satisfy:"a `#{value}'" block:(do (object)
+          (eq object value)
+        ))
+      )
+    )
   )
   
   (- (id) equal:(id)value is
@@ -279,9 +295,9 @@
   
   (- (id) raise is
     (set result nil)
-    (self satisfy:"raise any exception" block:(do (object)
+    (self satisfy:"raise any exception" block:(do (block)
       (try
-        (eval object)
+        (call block)
         (catch (e)
           (set result e)
           t
@@ -294,9 +310,9 @@
   
   (- (id) raise:(id)exceptionName is
     (set result nil)
-    (self satisfy:"raise an exception of type `#{exceptionName}'" block:(do (object)
+    (self satisfy:"raise an exception of type `#{exceptionName}'" block:(do (block)
       (try
-        (eval object)
+        (call block)
         (catch (e)
           (set result e)
           (eq (e name) exceptionName)
@@ -359,26 +375,9 @@
   (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
 
-(macro-0 ->
-  (puts margs)
+(macro-1 -> (*body)
+  `(send (do () ,@*body) should)
 )
-
-;(macro-1 -> (*body)
-  ;(puts (car *body))
-  ;(puts (send (car *body) class))
-  ;(if (eq (send *body class) NuBlock)
-    ;(then
-      ;(puts "Is a block!")
-      ;(puts *body)
-      ;(send *body should)
-    ;)
-    ;(else
-      ;(puts "NOT a block!")
-      ;`((BaconShould alloc) initWithObject:(do () ,@*body))
-    ;)
-  ;)
-  ;;`((BaconShould alloc) initWithObject:(do () ,@body))
-;)
 
 ; TODO figure out for real how this actually works and why getting the symbol in the macro doesn't work
 ; (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
