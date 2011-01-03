@@ -53,9 +53,7 @@ Whirl-wind tour
       ))
 
       (it "raises when trying to fetch an element" (do ()
-        ; TODO: this should work by not quoting, it's on the TODO
-        ; ((`(@ary objectAtIndex:0) should) raise:NSRangeException)
-        ((`((NSArray array) objectAtIndex:0) should) raise:"NSRangeException")
+        (((-> (@ary objectAtIndex:0)) should) raise:"NSRangeException")
       ))
 
       (it "compares to another object" (do ()
@@ -101,8 +99,24 @@ Implemented assertions
 * should closeTo:<float | list of floats>
 * should closeTo:<float | list of floats> delta:float
 * should raise
-* should raise:exception
+* should raise:exceptionName
 * should satisfy:message block:block
+
+
+The block helper macro
+----------------------
+
+The raise and raise: assertions will execute the block, which is the
+original object, and make sure that an exception is, or isn't, raised.
+
+But creating a block and wrapping it in a BaconShould instance can
+look a bit arcane, and you have to remember to use `send`:
+
+    ((send (do () ((NSArray array) objectAtIndex:0)) should) raise:"NSRangeException")
+
+Therefore the `->` macro has been introduced:
+
+    (((-> ((NSArray array) objectAtIndex:0)) should) raise:"NSRangeException")
 
 
 before/after
