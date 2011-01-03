@@ -114,6 +114,8 @@
   (it "checks if the string matches the given regexp" (do ()
     ((-> (("string" should) match:/strin./)) should:succeed)
     ((-> (("string" should) match:/slin./)) should:fail)
+    ((-> ((("string" should) not) match:/slin./)) should:succeed)
+    ((-> ((("string" should) not) match:/strin./)) should:fail)
   ))
   
   (it "checks if any exception is raised" (do ()
