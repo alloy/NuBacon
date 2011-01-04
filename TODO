@@ -1,4 +1,5 @@
 * Make the -> macro use the ~ macro for any further given messages
+* Rewrite all bacon specs ot use the `~' macro
 * Maybe make Should-not return a ShouldNot instance, so that the state of the original Should instance ins't negated? But this is mainly useful for meta-testing, like testing Bacon itself.
 * Make Should-satisfy:block: use the body of the block if @object is a block.
 * Execute the specs in a runloop and add the ability to delay the execution of assertions. So something like a `wait(seconds)' function
