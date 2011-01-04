@@ -122,12 +122,12 @@ Implemented assertions
 Predicate methods
 -----------------
 
-Any method of the object being tested, that can work as a predicate
-predicate, can be called on the BaconShould instance that wraps it.
-The result of the method call will determine wether or not the
-assertion passes. Any return value that evaluates to `true` will pass,
-likewise any value that evaluates to `false` will fail. Unless the
-assertion has been negated with `not`.
+Any method of the object being tested, that can work as a predicate,
+can be called on the BaconShould instance that wraps it. The result
+of the method call will determine wether or not the assertion passes.
+Any return value that evaluates to `true` will pass, likewise any
+value that evaluates to `false` will fail. Unless the assertion has
+been negated with `not`.
 
 For instance, NSString has a `isAbsolutePath` predicate method:
 
@@ -214,8 +214,8 @@ object, which is the first item in the list:
 
 -------------
 
-The raise and raise: assertions will execute the block, which is the
-original object, and make sure that an exception is, or isn't, raised.
+The `raise` and `raise:` assertions will execute the block, which is
+the wrapped object, and assert that an exception is, or isn't, raised.
 
 But creating a block and wrapping it in a BaconShould instance can
 look a bit arcane, and you have to remember to use `send`:
