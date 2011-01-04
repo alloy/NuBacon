@@ -19,7 +19,7 @@
       ))
 
       (it "raises when trying to fetch an element" (do ()
-        (set exception (~ (-> (@ary objectAtIndex:0)) should raise:"NSRangeException"))
+        (set exception (-> (@ary objectAtIndex:0) should raise:"NSRangeException"))
         (~ (exception reason) should match:/beyond bounds/)
       ))
 
@@ -31,7 +31,7 @@
       ))
 
       (it "changes the count when adding objects" (do ()
-        (~ (-> (@otherArray << "soup")) should change:(do () (@otherArray count)) by:+1)
+        (-> (@otherArray << "soup") should change:(do () (@otherArray count)) by:+1)
       ))
 
       ; Custom assertions are trivial to do, they are blocks returning

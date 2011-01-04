@@ -403,8 +403,16 @@
   (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
 
-(macro-1 -> (*body)
-  `(send (do () ,@*body) should)
+(macro-1 -> (blockBody *extraMessages)
+  (puts *extraMessages)
+  (if (> (*extraMessages count) 0)
+    (then
+      `(~ (send (do () ,blockBody) should) ,@*extraMessages)
+    )
+    (else
+      `(send (do () ,blockBody) should)
+    )
+  )
 )
 
 (macro-1 sendMessageWithList (object *body)

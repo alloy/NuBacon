@@ -53,7 +53,7 @@ Whirl-wind tour
       ))
 
       (it "raises when trying to fetch an element" (do ()
-        (set exception (~ (-> (@ary objectAtIndex:0)) should raise:"NSRangeException"))
+        (set exception (-> (@ary objectAtIndex:0) should raise:"NSRangeException"))
         (~ (exception reason) should match:/beyond bounds/)
       ))
 
@@ -65,7 +65,7 @@ Whirl-wind tour
       ))
 
       (it "changes the count when adding objects" (do ()
-        (~ (-> (@otherArray << "soup")) should change:(do () (@otherArray count)) by:+1)
+        (-> (@otherArray << "soup") should change:(do () (@otherArray count)) by:+1)
       ))
 
       ; Custom assertions are trivial to do, they are blocks returning
@@ -142,7 +142,10 @@ look a bit arcane, and you have to remember to use `send`:
 
 Therefore the `->` macro has been introduced:
 
-    (((-> ((NSArray array) objectAtIndex:0)) should) raise:"NSRangeException")
+    (-> (@ary objectAtIndex:0) should raise:"NSRangeException")
+
+As you might have been able to tell, any extra messages are
+dynamically dispatched by the `~` macro.
 
 
 before/after

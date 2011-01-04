@@ -122,10 +122,10 @@
   (it "checks if after executing a block a numeric value has changed at all" (do ()
     (set x 0)
     (set valueBlock (do () x))
-    ((-> (((-> (set x (+ x 1))) should) change:valueBlock)) should:succeed)
-    ((-> (((-> (set x x)) should) change:valueBlock)) should:fail)
-    ((-> ((((-> (set x x)) should) not) change:valueBlock)) should:succeed)
-    ((-> ((((-> (set x (+ x 1))) should) not) change:valueBlock)) should:fail)
+    (-> (-> (set x (+ x 1)) should change:valueBlock) should:succeed)
+    (-> (-> (set x x)       should change:valueBlock) should:fail)
+    (-> (-> (set x x)       should not change:valueBlock) should:succeed)
+    (-> (-> (set x (+ x 1)) should not change:valueBlock) should:fail)
   ))
   
   (it "checks if after executing a block a numeric value has changed by a given delta" (do ()
@@ -215,23 +215,29 @@
   ))
 ))
 
-(describe "NuBacon helper macros" `(
-  (it "includes the `->' shortcut for creating a block and returning a BaconShould instance for said block" (do ()
-    (set @ivar "foo")
-    (set lvar  "foo")
-    (set ran  nil)
-
-    (set result (-> (set ran (eq @ivar lvar))))
-
-    ((((result class) name) should) be:"BaconShould")
-    (((send (result object) body) should) equal:`((set ran (eq @ivar lvar))))
-    (((result should) not) raise) ; executes the block
-    ((ran should) be:t)
-  ))
-
+(describe "The NuBacon helper macros" `(
   (it "includes the `~' macro, which dynamically dispatches the messages, in an unordered list, to the first object in the list" (do ()
     ((-> (~ "foo" should be a kindOfClass:NSCFString)) should:succeed)
     ((-> (~ "foo" should not equal:"foo")) should:fail)
+  ))
+
+  (describe "concerning the `->' macro" `(
+    (it "is a shortcut for creating a block and returning a BaconShould instance for said block" (do ()
+      (set @ivar "foo")
+      (set lvar  "foo")
+      (set ran  nil)
+
+      (set result (-> (set ran (eq @ivar lvar))))
+
+      ((((result class) name) should) be:"BaconShould")
+      (((send (result object) body) should) equal:`((set ran (eq @ivar lvar))))
+      (((result should) not) raise) ; executes the block
+      ((ran should) be:t)
+    ))
+
+    (it "forwards any extra messages to the `~' macro" (do ()
+      (-> (-> (throw "oh noes") should not raise) should:fail)
+    ))
   ))
 ))
 
