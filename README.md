@@ -102,18 +102,18 @@ Now run it:
 Implemented assertions
 ----------------------
 
-* should:<predicate>
+* should:predicateBlock
 * should be:object
 * should (be) a:object
 * should equal:object
-* should closeTo:<float | list of floats>
-* should closeTo:<float | list of floats> delta:float
+* should closeTo:__*float | list of floats*__
+* should closeTo:__*float | list of floats*__ delta:float
 * should match:regexp
 * should change:valueBlock
 * should change:valueBlock by:delta
 * should raise
 * should raise:exceptionName
-* should <dynamic predicate message matching>
+* should __*dynamic predicate message matching*__
 * should satisfy:message block:block
 
 
