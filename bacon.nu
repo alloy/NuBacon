@@ -404,7 +404,6 @@
 )
 
 (macro-1 -> (blockBody *extraMessages)
-  (puts *extraMessages)
   (if (> (*extraMessages count) 0)
     (then
       `(~ (send (do () ,blockBody) should) ,@*extraMessages)
