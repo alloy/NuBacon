@@ -43,36 +43,36 @@ Whirl-wind tour
       ))
 
       (it "is empty" (do ()
-        (((@ary should) not) containObject:1)
+        (~ @ary should not containObject:1)
       ))
 
       (it "has zero elements" (do ()
-        (((@ary count) should) be:0)
-        (((((@ary count) should) not) be) closeTo:0.1) ; default delta of 0.00001
-        ((((@ary count) should) be) closeTo:0.1 delta:0.2)
+        (~ @ary count should be:0)
+        (~ @ary count should not be closeTo:0.1) ; default delta of 0.00001
+        (~ @ary count should be closeTo:0.1 delta:0.2)
       ))
 
       (it "raises when trying to fetch an element" (do ()
-        (set exception (((-> (@ary objectAtIndex:0)) should) raise:"NSRangeException"))
-        (((exception reason) should) match:/beyond bounds/)
+        (set exception (~ (-> (@ary objectAtIndex:0)) should raise:"NSRangeException"))
+        (~ (exception reason) should match:/beyond bounds/)
       ))
 
       (it "compares to another object" (do ()
-        ((@ary should) be:@ary)
-        ((@ary should) equal:@ary)
-        (((@otherArray should) not) be:@ary)
-        (((@otherArray should) not) equal:@ary)
+        (~ @ary should be:@ary)
+        (~ @ary should equal:@ary)
+        (~ @otherArray should not be:@ary)
+        (~ @otherArray should not equal:@ary)
       ))
 
       (it "changes the count when adding objects" (do ()
-        (((-> (@otherArray << "soup")) should) change:(do () (@otherArray count)) by:+1)
+        (~ (-> (@otherArray << "soup")) should change:(do () (@otherArray count)) by:+1)
       ))
 
       ; Custom assertions are trivial to do, they are blocks returning
       ; a boolean value. The block is defined at the top.
       (it "uses a custom assertion to check if the array is empty" (do ()
-        (((@ary should) be) a:emptyArray)
-        (((((@otherArray) should) not) be) a:emptyArray)
+        (~ @ary should be a: emptyArray)
+        (~ @otherArray should not be a: emptyArray)
       ))
 
       (it "has super powers" (do ()
@@ -117,8 +117,20 @@ Implemented assertions
 * should satisfy:message block:block
 
 
-The block helper macro
-----------------------
+Helper macros
+-------------
+
+Nesting calls to assertions can become unreadable quite fast:
+
+    (((((@ary count) should) not) be) closeTo:0.1 delta:0.2)
+
+For this purpose, the `~` macro has been introduced. It iterates over
+the symbols in the given list and sends those as messages to the
+object, which is the first item in the list:
+
+    (~ @ary count should not be closeTo:0.1 delta:0.2)
+
+-------------
 
 The raise and raise: assertions will execute the block, which is the
 original object, and make sure that an exception is, or isn't, raised.

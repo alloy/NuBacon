@@ -228,16 +228,16 @@
     (((result should) not) raise) ; executes the block
     ((ran should) be:t)
   ))
+
+  (it "includes the `~' macro, which dynamically dispatches the messages, in an unordered list, to the first object in the list" (do ()
+    ((-> (~ "foo" should be a kindOfClass:NSCFString)) should:succeed)
+    ((-> (~ "foo" should not equal:"foo")) should:fail)
+  ))
 ))
 
 (describe "NSObject, concerning Bacon extensions" `(
   (it "returns a BaconShould instance, wrapping that object" (do ()
     (("foo" should) equal:"foo")
-  ))
-  
-  (it "dynamically dispatches the messages in a list to should for nicer syntax" (do ()
-    ((-> ("foo" should be a kindOfClass:NSCFString)) should:succeed)
-    ((-> ("foo" should not equal:"foo")) should:fail)
   ))
   
   (it "takes a block that's to be called with the `object', the return value indicates success or failure" (do ()

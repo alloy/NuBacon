@@ -398,63 +398,10 @@
   )
 )
 
-(set $shouldSymbol ((NuSymbolTable sharedSymbolTable) symbolWithString:"should"))
-
-(macro-1 defineDynamicShouldDispatcher (klass)
-  `(class ,klass
-    (- (id) handleUnknownMessage:(id)message withContext:(id)context is
-      (if (eq (first message) $shouldSymbol)
-        (then
-          ; first symbol in the message list is `should'
-          (set messagesWithoutArgs (NSMutableArray array))
-          (set lastMessageWithArgs nil)
-          (set messages (cdr message))
-
-          (while (> (messages count) 0)
-            (set message (car messages))
-            (if (and (message isKindOfClass:NuSymbol) ((message stringValue) hasSuffix:":"))
-              (then
-                ; once we find the first NuSymbol that ends with a colon, i.e. part of a selector with args,
-                ; then we take it and the rest as the last message
-                (set lastMessageWithArgs messages)
-                (set messages `())
-              )
-              (else
-                ; this is a selector without args, so remove it from the messages list and continue
-                (messagesWithoutArgs << message)
-                (set messages (cdr messages))
-              )
-            )
-          )
-
-          (set shouldInstance ((BaconShould alloc) initWithObject:self))
-          ; first dispatch all messages without arguments, if there are any
-          ((messagesWithoutArgs list) each:(do (message) (sendMessageWithList shouldInstance message)))
-          ; then either dispatch the last message with arguments, or return the BaconShould instance
-          (if (lastMessageWithArgs)
-            (then (sendMessageWithList shouldInstance lastMessageWithArgs))
-            (else (shouldInstance))
-          )
-        )
-        (else
-          ; first symbol in the message list is not `should'
-          (super handleUnknownMessage:message withContext:context)
-        )
-      )
-    )
-  )
-)
-
 (class NSObject
+  (- (id) should is ((BaconShould alloc) initWithObject:self))
   (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
-
-; TODO not sure why, but the NSObject-handleUnknownMessage:withContext: method does not seem to be
-; able to handle these classes, hence we use a macro to define the method explicitely on all these classes.
-(defineDynamicShouldDispatcher NSObject)
-(defineDynamicShouldDispatcher NuCell)
-(defineDynamicShouldDispatcher NSNull)
-(defineDynamicShouldDispatcher NSArray)
 
 (macro-1 -> (*body)
   `(send (do () ,@*body) should)
@@ -466,6 +413,42 @@
     (set __body (list __body))
   )
   `(,object ,@__body)
+)
+
+(macro-1 ~ (*objectAndMessages)
+  (set __object (eval (car *objectAndMessages)))
+  (set __messages (cdr *objectAndMessages))
+
+  (set __messagesWithoutArgs (NSMutableArray array))
+  (set __lastMessageWithArgs nil)
+
+  (while (> (__messages count) 0)
+    (set __message (car __messages))
+    (if (and (__message isKindOfClass:NuSymbol) ((__message stringValue) hasSuffix:":"))
+      (then
+        ; once we find the first NuSymbol that ends with a colon, i.e. part of a selector with args,
+        ; then we take it and the rest as the last message
+        (set __lastMessageWithArgs __messages)
+        (set __messages `())
+      )
+      (else
+        ; this is a selector without args, so remove it from the messages list and continue
+        (__messagesWithoutArgs << __message)
+        (set __messages (cdr __messages))
+      )
+    )
+  )
+
+  ; first dispatch all messages without arguments, if there are any
+  ((__messagesWithoutArgs list) each:(do (__message)
+    (set __object (sendMessageWithList __object __message))
+  ))
+
+  ; then either dispatch the last message with arguments, or return the BaconShould instance
+  (if (__lastMessageWithArgs)
+    (then (sendMessageWithList __object __lastMessageWithArgs))
+    (else (__object))
+  )
 )
 
 (macro-0 describe
