@@ -99,6 +99,7 @@ Now run it:
 
     7 specifications (13 requirements), 1 failures, 0 errors
 
+
 Implemented assertions
 ----------------------
 
@@ -113,8 +114,89 @@ Implemented assertions
 * should change:valueBlock by:delta
 * should raise
 * should raise:exceptionName
+* should __*predicate method*__
 * should __*dynamic predicate message matching*__
 * should satisfy:message block:block
+
+
+Predicate methods
+-----------------
+
+Any method of the object being tested, that can work as a predicate
+predicate, can be called on the BaconShould instance that wraps it.
+The result of the method call will determine wether or not the
+assertion passes. Any return value that evaluates to `true` will pass,
+likewise any value that evaluates to `false` will fail. Unless the
+assertion has been negated with `not`.
+
+For instance, NSString has a `isAbsolutePath` predicate method:
+
+    (~ "/an/absolute/path" should isAbsolutePath)
+    (~ "a/relative/path" should not isAbsolutePath)
+
+However, as you can see this does not always lead to proper English,
+therefor there are a few special rules on how these methods can be
+called.
+
+If the predicate method starts with ‘is’ it can be omitted. The
+previous example can thus be rewritten as:
+
+    (~ "/an/absolute/path" should be an absolutePath)
+    (~ "a/relative/path" should not be an absolutePath)
+
+Method names in the third-person perspective can be called in the
+first-person perspective. For example, `respondsToSelector:` can be
+called by omitting the ‘s’ from ‘responds’:
+
+    (~ "foo" should respondToSelector:"isAbsolutePath")
+    (~ (NSArray array) should not respondToSelector:"isAbsolutePath")
+
+
+before/after
+------------
+
+`before` and `after` need to be defined before the first specification
+that should have them applied.
+
+
+Nested contexts
+---------------
+
+You can nest contexts, which will run before/after filters of parent
+contexts like so:
+
+    (describe "parent context" `(
+      (describe "child context" `(
+      ))
+    ))
+
+
+Shared contexts
+---------------
+
+You can define shared contexts in NuBacon like this:
+
+    (shared "an empty container" `(
+      (it "has size zero" (do ()
+        (((@ary count) should) be:0)
+      ))
+
+      (it "is empty" (do ()
+        (@ary should:beEmptyArray)
+      ))
+    ))
+
+    (describe "A new array" `(
+      (before (do ()
+        (set @ary (NSArray array))
+      )
+
+      (behaves_like "an empty container")
+    ))
+
+These contexts are not executed on their own, but can be included with
+behaves_like in other contexts.  You can use shared contexts to
+structure suites with many recurring specifications.
 
 
 Helper macros
@@ -146,52 +228,6 @@ Therefore the `->` macro has been introduced:
 
 As you might have been able to tell, any extra messages are
 dynamically dispatched by the `~` macro.
-
-
-before/after
-------------
-
-before and after need to be defined before the first specification in
-a context and are run before and after each specification.
-
-
-Nested contexts
----------------
-
-You can nest contexts, which will run before/after filters of parent
-contexts like so:
-
-    (describe "parent context" `(
-      (describe "child context" `(
-      ))
-    ))
-
-Shared contexts
----------------
-
-You can define shared contexts in NuBacon like this:
-
-    (shared "an empty container" `(
-      (it "has size zero" (do ()
-        (((@ary count) should) be:0)
-      ))
-
-      (it "is empty" (do ()
-        (@ary should:beEmptyArray)
-      ))
-    ))
-
-    (describe "A new array" `(
-      (before (do ()
-        (set @ary (NSArray array))
-      )
-
-      (behaves_like "an empty container")
-    ))
-
-These contexts are not executed on their own, but can be included with
-behaves_like in other contexts.  You can use shared contexts to
-structure suites with many recurring specifications.
 
 
 Thanks to

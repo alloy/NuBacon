@@ -155,11 +155,9 @@
     (~ (e name) should equal:"NSRangeException")
   ))
   
-  (it "checks if the object has the method and if so forward the message" (do ()
+  (it "checks if the object has the method and, if so, forward the message" (do ()
     (-> (~ "/an/absolute/path" should be isAbsolutePath) should:succeed)
     (-> (~ "a/relative/path" should be isAbsolutePath) should:fail)
-    (-> (~ "foo" should equalToString:"foo") should:succeed)
-    (-> (~ "foo" should equalToString:"bar") should:fail)
   ))
   
   (it "checks if the object has a predicate version of the method and if so forward the message" (do ()
