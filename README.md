@@ -107,8 +107,8 @@ Implemented assertions
 * should be:object
 * should (be) a:object
 * should equal:object
-* should closeTo:__*float | list of floats*__
-* should closeTo:__*float | list of floats*__ delta:float
+* should (be) closeTo:__*float | list of floats*__
+* should (be) closeTo:__*float | list of floats*__ delta:float
 * should match:regexp
 * should change:valueBlock
 * should change:valueBlock by:delta
@@ -178,11 +178,11 @@ You can define shared contexts in NuBacon like this:
 
     (shared "an empty container" `(
       (it "has size zero" (do ()
-        (((@ary count) should) be:0)
+        (~ (@ary count) should be:0)
       ))
 
       (it "is empty" (do ()
-        (@ary should:beEmptyArray)
+        (~ @ary should be: emptyArray)
       ))
     ))
 
@@ -234,6 +234,8 @@ Thanks to
 ---------
 
 * [Christian Neukirchen][cn], and other contributors, for Bacon itself!
+* Tim Burks for Nu
+* Laurent Sansonetti for brainwashing me about lisps ;)
 
 
 Contributing
