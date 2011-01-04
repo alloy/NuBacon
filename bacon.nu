@@ -369,7 +369,7 @@
             ; forward the predicate version of the message with the args
             (self satisfy:description block:(do (object)
               (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
-              (sendMessageWithSymbol object symbol (cdr methodName))
+              (sendMessageWithList object (append (list symbol) (cdr methodName)))
             ))
           )
           (else
@@ -383,7 +383,7 @@
                 ; example: respondsToSelector: is matched as respondToSelector:
                 (self satisfy:description block:(do (object)
                   (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:thirdPersonForm))
-                  (sendMessageWithSymbol object symbol (cdr methodName))
+                  (sendMessageWithList object (append (list symbol) (cdr methodName)))
                 ))
               )
               (else
@@ -398,19 +398,74 @@
   )
 )
 
+(set $shouldSymbol ((NuSymbolTable sharedSymbolTable) symbolWithString:"should"))
+
+(macro-1 defineDynamicShouldDispatcher (klass)
+  `(class ,klass
+    (- (id) handleUnknownMessage:(id)message withContext:(id)context is
+      (if (eq (first message) $shouldSymbol)
+        (then
+          ; first symbol in the message list is `should'
+          (set messagesWithoutArgs (NSMutableArray array))
+          (set lastMessageWithArgs nil)
+          (set messages (cdr message))
+
+          (while (> (messages count) 0)
+            (set message (car messages))
+            (if (and (message isKindOfClass:NuSymbol) ((message stringValue) hasSuffix:":"))
+              (then
+                ; once we find the first NuSymbol that ends with a colon, i.e. part of a selector with args,
+                ; then we take it and the rest as the last message
+                (set lastMessageWithArgs messages)
+                (set messages `())
+              )
+              (else
+                ; this is a selector without args, so remove it from the messages list and continue
+                (messagesWithoutArgs << message)
+                (set messages (cdr messages))
+              )
+            )
+          )
+
+          (set shouldInstance ((BaconShould alloc) initWithObject:self))
+          ; first dispatch all messages without arguments, if there are any
+          ((messagesWithoutArgs list) each:(do (message) (sendMessageWithList shouldInstance message)))
+          ; then either dispatch the last message with arguments, or return the BaconShould instance
+          (if (lastMessageWithArgs)
+            (then (sendMessageWithList shouldInstance lastMessageWithArgs))
+            (else (shouldInstance))
+          )
+        )
+        (else
+          ; first symbol in the message list is not `should'
+          (super handleUnknownMessage:message withContext:context)
+        )
+      )
+    )
+  )
+)
+
 (class NSObject
-  (- (id) should is ((BaconShould alloc) initWithObject:self))
   (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
+
+; TODO not sure why, but the NSObject-handleUnknownMessage:withContext: method does not seem to be
+; able to handle these classes, hence we use a macro to define the method explicitely on all these classes.
+(defineDynamicShouldDispatcher NSObject)
+(defineDynamicShouldDispatcher NuCell)
+(defineDynamicShouldDispatcher NSNull)
+(defineDynamicShouldDispatcher NSArray)
 
 (macro-1 -> (*body)
   `(send (do () ,@*body) should)
 )
 
-; TODO figure out for real how this actually works and why getting the symbol in the macro doesn't work
-; (set symbol ((NuSymbolTable sharedSymbolTable) symbolWithString:predicate))
-(macro-1 sendMessageWithSymbol (object message args)
-  `(,object ,(eval message) ,@(eval args))
+(macro-1 sendMessageWithList (object *body)
+  (set __body (eval *body))
+  (if (not (__body isKindOfClass:NuCell))
+    (set __body (list __body))
+  )
+  `(,object ,@__body)
 )
 
 (macro-0 describe

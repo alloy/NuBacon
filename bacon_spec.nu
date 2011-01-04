@@ -45,6 +45,7 @@
     ((((-> (self requirement:"throws" block:`(throw "ohnoes") report:nil)) should) not) raise)
   ))
   
+  ; NOTE: this requirement will print that the requirement failed/flunked, but in fact it does not!
   (it "flunks a requirement if it contains no assertions" (do ()
     (set numberOfFailuresBefore ($BaconSummary failures))
     (self requirement:"flunks" block:`() report:t)
@@ -232,6 +233,11 @@
 (describe "NSObject, concerning Bacon extensions" `(
   (it "returns a BaconShould instance, wrapping that object" (do ()
     (("foo" should) equal:"foo")
+  ))
+  
+  (it "dynamically dispatches the messages in a list to should for nicer syntax" (do ()
+    ((-> ("foo" should be a kindOfClass:NSCFString)) should:succeed)
+    ((-> ("foo" should not equal:"foo")) should:fail)
   ))
   
   (it "takes a block that's to be called with the `object', the return value indicates success or failure" (do ()
