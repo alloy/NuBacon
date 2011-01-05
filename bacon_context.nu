@@ -4,7 +4,8 @@
          (id) before
          (id) after
          (id) requirements
-         (id) printedName)
+         (id) printedName
+         (id) delegate)
   
   (- (id) initWithName:(id)name requirements:(id)requirements is
     (self initWithName:name before:nil after:nil requirements:requirements)
@@ -41,6 +42,10 @@
   
   (- (id) name is @name)
   
+  (- (id) setDelegate:(id)delegate is
+    (set @delegate delegate)
+  )
+  
   (- (id) run is
     ; TODO
     (set report t)
@@ -51,6 +56,8 @@
       )
     )
     (@requirements each:(do (requirement) (requirement run)))
+
+    (@delegate contextDidFinish:self)
   )
   
   (- (id) before:(id)block is
