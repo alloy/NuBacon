@@ -372,4 +372,5 @@
   ;))
 ;))
 
+((Bacon sharedInstance) run)
 ($BaconSummary print)

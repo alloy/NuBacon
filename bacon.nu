@@ -81,12 +81,12 @@
   )
 
   (- (id) runBeforeFilters is
-    ((@before list) each: (do (x) (@context instanceEval:x)))
+    (@before each:(do (x) (@context instanceEval:x)))
   )
 
   (- (id) runAfterFiltersAndThrow:(id)shouldThrow is
     (try
-      ((@after list) each: (do (x) (@context instanceEval:x)))
+      (@after each:(do (x) (@context instanceEval:x)))
       (catch (e)
         (if (shouldThrow) (throw e))
       )
@@ -94,14 +94,10 @@
   )
 
   (- (id) run is
-    ;(if (@report)
-      ;(unless (@printedName)
-        ;(set @printedName t)
-        ;(puts "\n#{@name}")
-      ;)
-      ;($BaconSummary addSpecification)
-      ;(print "- #{description}")
-    ;)
+    (if (@report)
+      ($BaconSummary addSpecification)
+      (print "- #{@description}")
+    )
     
     (set numberOfRequirementsBefore ($BaconSummary requirements))
     
@@ -134,7 +130,7 @@
             )
           )
           (print type)
-          ($BaconSummary addToErrorLog:e context:(@context name) specification:description type:type)
+          ($BaconSummary addToErrorLog:e context:(@context name) specification:@description type:type)
         )
       )
     )
@@ -155,8 +151,12 @@
   )
 
   (- addContext:(id)context is
-    (@contexts addObject:context)
-    (puts (@contexts description))
+    (@contexts << context)
+    ;(puts (@contexts description))
+  )
+
+  (- (id) run is
+    (@contexts each:(do (context) (context run)))
   )
 )
 (set $BaconSharedInstance ((Bacon alloc) init))
@@ -170,51 +170,63 @@
          (id) printedName)
   
   (- (id) initWithName:(id)name requirements:(id)requirements is
+    (self initWithName:name before:nil after:nil requirements:requirements)
+  )
+
+  (- (id) initWithName:(id)name before:(id)beforeFilters after:(id)afterFilters requirements:(id)requirements is
     (self init)
-    (set @before (NSMutableArray array))
-    (set @after (NSMutableArray array))
+
+    ; register this context *before* evalling the requirements list, which may contain nested contexts
+    ; that have to be after this one in the contexts list
+    ((Bacon sharedInstance) addContext:self)
+
+    (if (beforeFilters)
+      (then (set @before (beforeFilters mutableCopy)))
+      (else (set @before (NSMutableArray array)))
+    )
+    (if (afterFilters)
+      (then (set @after (afterFilters mutableCopy)))
+      (else (set @after (NSMutableArray array)))
+    )
+
     (set @name name)
     (set @printedName nil)
-    (set @requirements requirements)
-    ((Bacon sharedInstance) addContext:self)
+
+    (set @requirements (NSMutableArray array))
+    (requirements each:(do (x) (eval x))) ; create a BaconRequirement for each entry in the quoted list
+
     self
   )
-  
+
   (- (id) childContextWithName:(id)childName requirements:(id)requirements is
-    (set child ((BaconContext alloc) initWithName:"#{@name} #{childName}" requirements:requirements))
-    ((@before list) each: (do (x) (child before:x)))
-    ((@after list) each: (do (x) (child after:x)))
-    child
+    ((BaconContext alloc) initWithName:"#{@name} #{childName}" before:@before after:@after requirements:requirements)
   )
   
   (- (id) name is @name)
   
   (- (id) run is
-    (@requirements each: (do (x) (eval x)))
-  )
-  
-  (- (id) before:(id)block is
-    (@before addObject:block)
-  )
-  
-  (- (id) after:(id)block is
-    (@after addObject:block)
-  )
-  
-  (- (id) requirement:(id)description block:(id)block report:(id)report is
-    (set requirement ((BaconRequirement alloc) initWithContext:self description:description block:block before:@before after:@after report:report))
-
-    ; TODO move?
+    ; TODO
+    (set report t)
     (if (report)
       (unless (@printedName)
         (set @printedName t)
         (puts "\n#{@name}")
       )
-      ($BaconSummary addSpecification)
-      (print "- #{description}")
     )
-
-    (requirement run)
+    (@requirements each:(do (requirement) (requirement run)))
+  )
+  
+  (- (id) before:(id)block is
+    (@before << block)
+  )
+  
+  (- (id) after:(id)block is
+    (@after << block)
+  )
+  
+  (- (id) requirement:(id)description block:(id)block report:(id)report is
+    (set requirement ((BaconRequirement alloc) initWithContext:self description:description block:block before:@before after:@after report:report))
+    (@requirements << requirement)
   )
 )
 
@@ -528,12 +540,12 @@
 (macro describe (name requirements)
   `(try
     (set parent self)
-    ((parent childContextWithName:,name requirements:,requirements) run)
+    (parent childContextWithName:,name requirements:,requirements)
     (catch (e)
       (if (eq (e reason) "undefined symbol self while evaluating expression (set parent self)")
         (then
           ; not running inside a context
-          (((BaconContext alloc) initWithName:,name requirements:,requirements) run)
+          ((BaconContext alloc) initWithName:,name requirements:,requirements)
         )
         ; another type of exception occured
         (else (throw e))
