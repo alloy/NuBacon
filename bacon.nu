@@ -408,7 +408,7 @@
   (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
 
-(macro-1 -> (blockBody *extraMessages)
+(macro -> (blockBody *extraMessages)
   (if (> (*extraMessages count) 0)
     (then
       `(~ (send (do () ,blockBody) should) ,@*extraMessages)
@@ -419,7 +419,7 @@
   )
 )
 
-(macro-1 sendMessageWithList (object *body)
+(macro sendMessageWithList (object *body)
   (set __body (eval *body))
   (if (not (__body isKindOfClass:NuCell))
     (set __body (list __body))
@@ -427,7 +427,7 @@
   `(,object ,@__body)
 )
 
-(macro-1 ~ (*objectAndMessages)
+(macro ~ (*objectAndMessages)
   (set __object (eval (car *objectAndMessages)))
   (set __messages (cdr *objectAndMessages))
 
@@ -463,7 +463,7 @@
   )
 )
 
-(macro-1 describe (name requirements)
+(macro describe (name requirements)
   `(try
     (set parent self)
     ((parent childContextWithName:,name requirements:,requirements) run)
@@ -480,14 +480,14 @@
   )
 )
 
-(macro-1 it (description block)
+(macro it (description block)
   `(self requirement:,description block:,block report:t)
 )
 
-(macro-1 before (block)
+(macro before (block)
   `(self before:,block)
 )
-(macro-1 after (block)
+(macro after (block)
   `(self after:,block)
 )
 
@@ -495,11 +495,11 @@
 
 (set $BaconShared (NSMutableDictionary dictionary))
 
-(macro-1 shared (name requirements)
+(macro shared (name requirements)
   `($BaconShared setValue:,requirements forKey:,name)
 )
 
-(macro-1 behaves_like (name)
+(macro behaves_like (name)
   (set context ($BaconShared valueForKey:name))
   (if (context)
     ; each requirement is a complete `it' block

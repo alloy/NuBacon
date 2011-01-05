@@ -1,6 +1,6 @@
 (load "bacon.nu")
 
-(macro-1 catch-failure (block)
+(macro catch-failure (block)
   `(try
     ,block
     (catch (e)
