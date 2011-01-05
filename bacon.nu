@@ -60,6 +60,38 @@
 
 (set $BaconSummary ((BaconSummary alloc) init))
 
+(class BaconRequirement is NSObject
+  (ivars (id) description
+         (id) block
+         (id) before
+         (id) after
+         (id) report)
+
+  (- (id) initWithDescription:(id)description block:(id)block before:(id)beforeFilters after:(id)afterFilters report:(id)report is
+    (self init)
+    (set @description description)
+    (set @block block)
+    (set @report report)
+    ; create copies so that when the given arrays change later on, they don't change these
+    (set @before (beforeFilters copy))
+    (set @after (afterFilters copy))
+    self
+  )
+
+  (- (id) runBeforeFiltersInContext:(id)context is
+    ((@before list) each: (do (x) (context instanceEval:x)))
+  )
+
+  (- (id) runAfterFiltersInContext:(id)context throw:(id)shouldThrow is
+    (try
+      ((@after list) each: (do (x) (context instanceEval:x)))
+      (catch (e)
+        (if (shouldThrow) (throw e))
+      )
+    )
+  )
+)
+
 (class BaconContext is NSObject
   ; use the dynamic `ivars' so the user can add ivars in before/after
   (ivars (id) name
@@ -98,6 +130,9 @@
   )
   
   (- (id) requirement:(id)description block:(id)block report:(id)report is
+    (set r ((BaconRequirement alloc) initWithDescription:description block:block before:@before after:@after report:report))
+    (puts r)
+
     (if (report)
       (unless (@printedName)
         (set @printedName t)
@@ -111,7 +146,7 @@
     
     (try
       (try ; wrap before/requirement/after
-        ((@before list) each: (do (x) (self instanceEval:x)))
+        (r runBeforeFiltersInContext:self)
         (call block)
         (if (eq numberOfRequirementsBefore ($BaconSummary requirements))
           ; the requirement did not contain any assertions, so it flunked
@@ -119,11 +154,11 @@
         )
         (catch (e)
           ; don't allow after filters to throw, as it could result in an endless loop
-          (self runAfterFilterAndThrow:nil)
+          (r runAfterFiltersInContext:self throw:nil)
           (throw e)
         )
         ; ensure the after filters are always run, these however may throw, as we already ran the requirement
-        (self runAfterFilterAndThrow:t)
+        (r runAfterFiltersInContext:self throw:t)
       )
       (catch (e) ; now really handle the bubbled exception
         (if (report)
@@ -144,15 +179,6 @@
     )
     
     (if (report) (print "\n"))
-  )
-  
-  (- (id) runAfterFilterAndThrow:(id)shouldThrow is
-    (try
-      ((@after list) each: (do (x) (self instanceEval:x)))
-      (catch (e)
-        (if (shouldThrow) (throw e))
-      )
-    )
   )
 )
 
