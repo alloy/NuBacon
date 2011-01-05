@@ -9,6 +9,15 @@
   )
 )
 
+(macro createRequirement (description block report)
+  `((BaconRequirement alloc) initWithContext:self
+                                 description:,description
+                                       block:,block
+                                      before:emptyArray
+                                       after:emptyArray
+                                      report:,report)
+)
+
 ; Hooray for meta-testing.
 (set succeed
   (do (block)
@@ -41,25 +50,13 @@
   ))
   
   (it "catches any type of exception so the spec suite can continue" (do ()
-    (set requirement ((BaconRequirement alloc) initWithContext:self
-                                                   description:"throws"
-                                                         block:(do () throw "ohnoes")
-                                                        before:emptyArray
-                                                         after:emptyArray
-                                                        report:nil))
-    (-> (requirement run) should not raise)
+    (-> ((createRequirement "throws" (do () throw "ohnoes") nil) run) should not raise)
   ))
   
   ; NOTE: this requirement will print that the requirement failed/flunked, but in fact it does not!
   (it "flunks a requirement if it contains no assertions" (do ()
     (set numberOfFailuresBefore ($BaconSummary failures))
-    (set requirement ((BaconRequirement alloc) initWithContext:self
-                                                   description:"flunks"
-                                                         block:(do ()) ; very very empty
-                                                        before:emptyArray
-                                                         after:emptyArray
-                                                        report:t))
-    (requirement run)
+    ((createRequirement "flunks" (do ()) t) run)
     (~ ($BaconSummary failures) should equal:(+ numberOfFailuresBefore 1))
     (($BaconSummary valueForIvar:"counters") setValue:numberOfFailuresBefore forKey:"failures")
   ))
