@@ -111,8 +111,8 @@
     
     (try
       (try ; wrap before/requirement/after
-        ((@before list) each: (do (x) (eval x)))
-        (eval block)
+        ((@before list) each: (do (x) (self instanceEval:x)))
+        (call block)
         (if (eq numberOfRequirementsBefore ($BaconSummary requirements))
           ; the requirement did not contain any assertions, so it flunked
           (throw ((BaconError alloc) initWithDescription:"flunked"))
@@ -148,7 +148,7 @@
   
   (- (id) runAfterFilterAndThrow:(id)shouldThrow is
     (try
-      ((@after list) each: (do (x) (eval x)))
+      ((@after list) each: (do (x) (self instanceEval:x)))
       (catch (e)
         (if (shouldThrow) (throw e))
       )
@@ -399,6 +399,11 @@
 )
 
 (class NSObject
+  (- (id) instanceEval:(id)block is
+    (set c (send block context))
+    (send block evalWithArguments:nil context:c self:self)
+  )
+
   (- (id) should is ((BaconShould alloc) initWithObject:self))
   (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
@@ -458,17 +463,15 @@
   )
 )
 
-(macro-0 describe
-  (set __name (car margs))
-  (set __requirements (eval (cdr margs)))
-  (try
+(macro-1 describe (name requirements)
+  `(try
     (set parent self)
-    ((parent childContextWithName:__name requirements:__requirements) run)
+    ((parent childContextWithName:,name requirements:,requirements) run)
     (catch (e)
       (if (eq (e reason) "undefined symbol self while evaluating expression (set parent self)")
         (then
           ; not running inside a context
-          (((BaconContext alloc) initWithName:__name requirements:__requirements) run)
+          (((BaconContext alloc) initWithName:,name requirements:,requirements) run)
         )
         ; another type of exception occured
         (else (throw e))
@@ -477,37 +480,31 @@
   )
 )
 
-(macro-0 it
-  (set __description (car margs))
-  (set __block (cdr margs))
-  (self requirement:__description block:__block report:t)
+(macro-1 it (description block)
+  `(self requirement:,description block:,block report:t)
 )
 
-; TODO for some reason this only works if the macro accepts an arg like string, before the block.
-(macro-0 before
-  (self before:margs)
+(macro-1 before (block)
+  `(self before:,block)
 )
-(macro-0 after
-  (self after:margs)
+(macro-1 after (block)
+  `(self after:,block)
 )
 
 ; shared contexts
 
 (set $BaconShared (NSMutableDictionary dictionary))
 
-(macro-0 shared
-  (set __name (car margs))
-  (set __requirements (eval (cdr margs)))
-  ($BaconShared setValue:__requirements forKey:__name)
+(macro-1 shared (name requirements)
+  `($BaconShared setValue:,requirements forKey:,name)
 )
 
-(macro-0 behaves_like
-  (set __name (car margs))
-  (set context ($BaconShared valueForKey:__name))
+(macro-1 behaves_like (name)
+  (set context ($BaconShared valueForKey:name))
   (if (context)
     ; each requirement is a complete `it' block
     (then (context each: (do (requirement) (eval requirement))))
-    (else (throw "No such context `#{__name}'"))
+    (else (throw "No such context `#{name}'"))
   )
 )
 

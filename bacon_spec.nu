@@ -41,13 +41,13 @@
   ))
   
   (it "catches any type of exception so the spec suite can continue" (do ()
-    (-> (self requirement:"throws" block:`(throw "ohnoes") report:nil) should not raise)
+    (-> (self requirement:"throws" block:(do () throw "ohnoes") report:nil) should not raise)
   ))
   
   ; NOTE: this requirement will print that the requirement failed/flunked, but in fact it does not!
   (it "flunks a requirement if it contains no assertions" (do ()
     (set numberOfFailuresBefore ($BaconSummary failures))
-    (self requirement:"flunks" block:`() report:t)
+    (self requirement:"flunks" block:(do ()) report:t)
     (~ ($BaconSummary failures) should equal:(+ numberOfFailuresBefore 1))
     (($BaconSummary valueForIvar:"counters") setValue:numberOfFailuresBefore forKey:"failures")
   ))
@@ -303,7 +303,7 @@
     (~ @c should be:nil)
   ))
   
-  (describe "when nested at a sibling level" (do ()
+  (describe "when nested at a sibling level" `(
     (it "does not run from sibling level" (do ()
       (~ @c should be:nil)
     ))
