@@ -61,14 +61,16 @@
 (set $BaconSummary ((BaconSummary alloc) init))
 
 (class BaconRequirement is NSObject
-  (ivars (id) description
+  (ivars (id) context
+         (id) description
          (id) block
          (id) before
          (id) after
          (id) report)
 
-  (- (id) initWithDescription:(id)description block:(id)block before:(id)beforeFilters after:(id)afterFilters report:(id)report is
+  (- (id) initWithContext:(id)context description:(id)description block:(id)block before:(id)beforeFilters after:(id)afterFilters report:(id)report is
     (self init)
+    (set @context context)
     (set @description description)
     (set @block block)
     (set @report report)
@@ -78,19 +80,86 @@
     self
   )
 
-  (- (id) runBeforeFiltersInContext:(id)context is
-    ((@before list) each: (do (x) (context instanceEval:x)))
+  (- (id) runBeforeFilters is
+    ((@before list) each: (do (x) (@context instanceEval:x)))
   )
 
-  (- (id) runAfterFiltersInContext:(id)context throw:(id)shouldThrow is
+  (- (id) runAfterFiltersAndThrow:(id)shouldThrow is
     (try
-      ((@after list) each: (do (x) (context instanceEval:x)))
+      ((@after list) each: (do (x) (@context instanceEval:x)))
       (catch (e)
         (if (shouldThrow) (throw e))
       )
     )
   )
+
+  (- (id) run is
+    ;(if (@report)
+      ;(unless (@printedName)
+        ;(set @printedName t)
+        ;(puts "\n#{@name}")
+      ;)
+      ;($BaconSummary addSpecification)
+      ;(print "- #{description}")
+    ;)
+    
+    (set numberOfRequirementsBefore ($BaconSummary requirements))
+    
+    (try
+      (try ; wrap before/requirement/after
+        (self runBeforeFilters)
+        (@context instanceEval:@block)
+        (if (eq numberOfRequirementsBefore ($BaconSummary requirements))
+          ; the requirement did not contain any assertions, so it flunked
+          (throw ((BaconError alloc) initWithDescription:"flunked"))
+        )
+        (catch (e)
+          ; don't allow after filters to throw, as it could result in an endless loop
+          (self runAfterFiltersAndThrow:nil)
+          (throw e)
+        )
+        ; ensure the after filters are always run, these however may throw, as we already ran the requirement
+        (self runAfterFiltersAndThrow:t)
+      )
+      (catch (e) ; now really handle the bubbled exception
+        (if (@report)
+          (if (eq (e class) BaconError)
+            (then
+              ($BaconSummary addFailure)
+              (set type " [FAILURE]")
+            )
+            (else
+              ($BaconSummary addError)
+              (set type " [ERROR]")
+            )
+          )
+          (print type)
+          ($BaconSummary addToErrorLog:e context:(@context name) specification:description type:type)
+        )
+      )
+    )
+    
+    (if (@report) (print "\n"))
+  )
 )
+
+(class Bacon is NSObject
+  (ivars (id) contexts)
+
+  (+ sharedInstance is $BaconSharedInstance)
+
+  (- init is
+    (super init)
+    (set @contexts (NSMutableArray array))
+    self
+  )
+
+  (- addContext:(id)context is
+    (@contexts addObject:context)
+    (puts (@contexts description))
+  )
+)
+(set $BaconSharedInstance ((Bacon alloc) init))
 
 (class BaconContext is NSObject
   ; use the dynamic `ivars' so the user can add ivars in before/after
@@ -107,6 +176,7 @@
     (set @name name)
     (set @printedName nil)
     (set @requirements requirements)
+    ((Bacon sharedInstance) addContext:self)
     self
   )
   
@@ -116,6 +186,8 @@
     ((@after list) each: (do (x) (child after:x)))
     child
   )
+  
+  (- (id) name is @name)
   
   (- (id) run is
     (@requirements each: (do (x) (eval x)))
@@ -130,9 +202,9 @@
   )
   
   (- (id) requirement:(id)description block:(id)block report:(id)report is
-    (set r ((BaconRequirement alloc) initWithDescription:description block:block before:@before after:@after report:report))
-    (puts r)
+    (set requirement ((BaconRequirement alloc) initWithContext:self description:description block:block before:@before after:@after report:report))
 
+    ; TODO move?
     (if (report)
       (unless (@printedName)
         (set @printedName t)
@@ -141,44 +213,8 @@
       ($BaconSummary addSpecification)
       (print "- #{description}")
     )
-    
-    (set numberOfRequirementsBefore ($BaconSummary requirements))
-    
-    (try
-      (try ; wrap before/requirement/after
-        (r runBeforeFiltersInContext:self)
-        (call block)
-        (if (eq numberOfRequirementsBefore ($BaconSummary requirements))
-          ; the requirement did not contain any assertions, so it flunked
-          (throw ((BaconError alloc) initWithDescription:"flunked"))
-        )
-        (catch (e)
-          ; don't allow after filters to throw, as it could result in an endless loop
-          (r runAfterFiltersInContext:self throw:nil)
-          (throw e)
-        )
-        ; ensure the after filters are always run, these however may throw, as we already ran the requirement
-        (r runAfterFiltersInContext:self throw:t)
-      )
-      (catch (e) ; now really handle the bubbled exception
-        (if (report)
-          (if (eq (e class) BaconError)
-            (then
-              ($BaconSummary addFailure)
-              (set type " [FAILURE]")
-            )
-            (else
-              ($BaconSummary addError)
-              (set type " [ERROR]")
-            )
-          )
-          (print type)
-          ($BaconSummary addToErrorLog:e context:@name specification:description type:type)
-        )
-      )
-    )
-    
-    (if (report) (print "\n"))
+
+    (requirement run)
   )
 )
 
