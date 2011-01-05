@@ -4,7 +4,8 @@
          (id) block
          (id) before
          (id) after
-         (id) report)
+         (id) report
+         (id) delegate)
 
   (- (id) initWithContext:(id)context description:(id)description block:(id)block before:(id)beforeFilters after:(id)afterFilters report:(id)report is
     (self init)
@@ -16,6 +17,10 @@
     (set @before (beforeFilters copy))
     (set @after (afterFilters copy))
     self
+  )
+
+  (- (id) setDelegate:(id)delegate is
+    (set @delegate delegate)
   )
 
   (- (id) runBeforeFilters is
@@ -74,5 +79,7 @@
     )
     
     (if (@report) (print "\n"))
+
+    (@delegate requirementDidFinish:self)
   )
 )

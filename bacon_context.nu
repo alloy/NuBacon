@@ -5,7 +5,8 @@
          (id) after
          (id) requirements
          (id) printedName
-         (id) delegate)
+         (id) delegate
+         (id) currentRequirementIndex)
   
   (- (id) initWithName:(id)name requirements:(id)requirements is
     (self initWithName:name before:nil after:nil requirements:requirements)
@@ -29,6 +30,7 @@
 
     (set @name name)
     (set @printedName nil)
+    (set @currentRequirementIndex 0)
 
     (set @requirements (NSMutableArray array))
     (requirements each:(do (x) (eval x))) ; create a BaconRequirement for each entry in the quoted list
@@ -55,11 +57,32 @@
         (puts "\n#{@name}")
       )
     )
-    (@requirements each:(do (requirement) (requirement run)))
 
-    (@delegate contextDidFinish:self)
+    (set requirement (self currentRequirement))
+    (requirement setDelegate:self)
+    (requirement performSelector:"run" withObject:nil afterDelay:0)
+
+    ; TODO is it correct that I need to call this here, again?!
+    ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
+  )
+
+  (- (id) currentRequirement is
+    (@requirements objectAtIndex:@currentRequirementIndex)
   )
   
+  (- (id) requirementDidFinish:(id)requirement is
+    (if (< (+ @currentRequirementIndex 1) (@requirements count))
+      (then
+        (set @currentRequirementIndex (+ @currentRequirementIndex 1))
+        (self run)
+      )
+      (else
+        ; DONE!
+        (@delegate contextDidFinish:self)
+      )
+    )
+  )
+
   (- (id) before:(id)block is
     (@before << block)
   )
