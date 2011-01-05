@@ -2,6 +2,7 @@
   (ivars (id) context
          (id) description
          (id) block
+         (id) postponedBlock
          (id) before
          (id) after
          (id) report
@@ -12,6 +13,7 @@
     (set @context context)
     (set @description description)
     (set @block block)
+    (set @postponedBlock nil)
     (set @report report)
     ; create copies so that when the given arrays change later on, they don't change these
     (set @before (beforeFilters copy))
@@ -80,6 +82,21 @@
     
     (if (@report) (print "\n"))
 
+    (unless (@postponedBlock) (puts "will finish requirement!") (@delegate requirementDidFinish:self))
+  )
+
+  (- (id) wait:(id)seconds thenRunBlock:(id)block is
+    (set @postponedBlock block)
+    (puts "SCHEDULING POSTPONED BLOCK!")
+    (self performSelector:"runPostponedBlock" withObject:nil afterDelay:seconds)
+    ; TODO is it correct that I need to call this here, again?!
+    ;((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:seconds))
+  )
+
+  (- (id) runPostponedBlock is
+    (puts "GONNA RUN POSTPONED BLOCK!")
+    ; TODO this needs to be run inside try-catch blocks and after filters should be run after this!
+    (@context instanceEval:@postponedBlock)
     (@delegate requirementDidFinish:self)
   )
 )

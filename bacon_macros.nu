@@ -97,3 +97,9 @@
     (else (throw "No such context `#{name}'"))
   )
 )
+
+(macro wait (seconds block)
+  ;(set r (self currentRequirement))
+  ;(puts (r valueForIvar:"description"))
+  `((self currentRequirement) wait:,seconds thenRunBlock:,block)
+)

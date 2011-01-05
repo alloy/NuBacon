@@ -63,7 +63,7 @@
     (requirement performSelector:"run" withObject:nil afterDelay:0)
 
     ; TODO is it correct that I need to call this here, again?!
-    ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
+    ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:2.0))
   )
 
   (- (id) currentRequirement is

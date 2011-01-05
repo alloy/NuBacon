@@ -245,6 +245,18 @@
       (-> (-> (throw "oh noes") should not raise) should:fail)
     ))
   ))
+
+  (it "includes the `wait' macro, which schedules the given block to run after n seconds, this will halt any further requirement execution as well" (do ()
+    (set before (NSDate date))
+    (set after nil)
+    (wait 1.5 (do ()
+      (puts "Hello from posponed block!")
+      ;(~ ((NSDate date) timeIntervalSinceDate:before) should be closeTo:0.5 delta:0.01)
+      ;(~ ((NSDate date) timeIntervalSinceDate:after) should be closeTo:0.5 delta:0.01)
+    ))
+    (puts "AFTER WAIT CALL!")
+    (set after (NSDate date))
+  ))
 ))
 
 (describe "NSObject, concerning Bacon extensions" `(
