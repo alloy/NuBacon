@@ -29,6 +29,7 @@
     ; TODO check if this is really the right way to do it?
     ; TODO make this work nicely when there is already a runloop, like in an (iOS) app runner
     ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
+    ;((NSApplication sharedApplication) run)
   )
 
   (- (id) currentContext is
@@ -43,6 +44,9 @@
       )
       (else
         ; DONE!
+        ;((NSApplication sharedApplication) stop:self)
+        ;(set modes (`("NSDefaultRunLoopMode") array))
+        ;((NSRunLoop mainRunLoop) performSelector:"terminate:" target:(NSApplication sharedApplication) argument:self order:1000 modes:modes)
       )
     )
   )

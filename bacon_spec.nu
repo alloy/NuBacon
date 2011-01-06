@@ -247,15 +247,13 @@
   ))
 
   (it "includes the `wait' macro, which schedules the given block to run after n seconds, this will halt any further requirement execution as well" (do ()
-    (set before (NSDate date))
-    (set after nil)
+    (set startedAt (NSDate date))
+    (set numberOfSpecsBefore ($BaconSummary specifications))
     (wait 1.5 (do ()
-      (puts "Hello from posponed block!")
-      ;(~ ((NSDate date) timeIntervalSinceDate:before) should be closeTo:0.5 delta:0.01)
-      ;(~ ((NSDate date) timeIntervalSinceDate:after) should be closeTo:0.5 delta:0.01)
+      (~ ((NSDate date) timeIntervalSinceDate:startedAt) should be closeTo:1.5 delta:0.01)
+      ; no other specs should have ran in the meantime!
+      (~ ($BaconSummary specifications) should be:numberOfSpecsBefore)
     ))
-    (puts "AFTER WAIT CALL!")
-    (set after (NSDate date))
   ))
 ))
 

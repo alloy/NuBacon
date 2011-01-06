@@ -1,6 +1,6 @@
 = Runloop related
 
-* Add something like a `wait(seconds)' macro that schedules the given block to execute later in the runloop and not run any other requirements in the meantime
+* Make postponed blocks (wait) run in the same try-catch blocks as normal specs.
 * Check TODOs in code about:
   * If I make the runloop run in the correct way: ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
   * If it plays nice when there's already a runloop, eg in a (iOS) app runner
