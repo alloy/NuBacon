@@ -249,10 +249,24 @@
   (it "includes the `wait' macro, which schedules the given block to run after n seconds, this will halt any further requirement execution as well" (do ()
     (set startedAt (NSDate date))
     (set numberOfSpecsBefore ($BaconSummary specifications))
-    (wait 1.5 (do ()
-      (~ ((NSDate date) timeIntervalSinceDate:startedAt) should be closeTo:1.5 delta:0.01)
+    (wait 1 (do ()
+      (~ ((NSDate date) timeIntervalSinceDate:startedAt) should be closeTo:1 delta:0.01)
       ; no other specs should have ran in the meantime!
       (~ ($BaconSummary specifications) should be:numberOfSpecsBefore)
+    ))
+  ))
+
+  (describe "concerning the `wait' macro" `(
+    (after (do ()
+      ; make sure the after block is in fact ran after the postponed block
+      (~ @x should be:42)
+    ))
+
+    ; TODO when refactoring the specs, this should become specs that assert that:
+    ; * no exceptions bubble up
+    ; * failures/errors/flunk are reported the same way as in normal requirements
+    (it "runs the postponed block in the same way as normal requirements" (do ()
+      (wait 0.5 (do () (set @x 42)))
     ))
   ))
 ))

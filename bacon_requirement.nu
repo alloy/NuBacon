@@ -78,7 +78,7 @@
     
     (if (@report) (print "\n"))
 
-    (unless (@hasPostponedBlock)
+    (unless @hasPostponedBlock
       ;(puts "will finish requirement!")
       (@context requirementDidFinish:self)
     )

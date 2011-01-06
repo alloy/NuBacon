@@ -1,6 +1,5 @@
 = Runloop related
 
-* Make postponed blocks (wait) run in the same try-catch blocks as normal specs.
 * Check TODOs in code about:
   * If I make the runloop run in the correct way: ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
   * If it plays nice when there's already a runloop, eg in a (iOS) app runner
@@ -8,5 +7,6 @@
 
 --------
 
+* Clean up specs by classes
 * Maybe make Should-not return a ShouldNot instance, so that the state of the original Should instance ins't negated? But this is mainly useful for meta-testing, like testing Bacon itself.
 * Make Should-satisfy:block: use the body of the block if @object is a block?
