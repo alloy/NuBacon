@@ -18,7 +18,7 @@
   )
 
   (- addContext:(id)context is
-    (@contexts << context)
+    (@contexts addObject:context)
   )
 
   (- (id) run is
@@ -29,7 +29,11 @@
     ; TODO make this work nicely when there is already a runloop, like in an (iOS) app runner
     ;((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
     ;((NSRunLoop mainRunLoop) runUntilDate:(NSDate distantFuture))
-    ((NSApplication sharedApplication) run)
+    (try
+      ((NSApplication sharedApplication) run)
+      (catch (e))
+      ; running on iOS most probably
+    )
   )
 
   (- (id) currentContext is
@@ -45,7 +49,11 @@
       (else
         ; DONE!
         ($BaconSummary print)
-        ((NSApplication sharedApplication) terminate:self)
+        (try
+          ((NSApplication sharedApplication) terminate:self)
+          (catch (e))
+          ; running on iOS most probably
+        )
       )
     )
   )
@@ -75,3 +83,4 @@
   (- (id) should is ((BaconShould alloc) initWithObject:self))
   (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
+

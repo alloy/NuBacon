@@ -28,11 +28,11 @@
   )
 
   (- (id) runBeforeFilters is
-    (@before each:(do (x) (@context instanceEval:x)))
+    ((@before list) each:(do (x) (@context instanceEval:x)))
   )
 
   (- (id) runAfterFilters is
-    (@after each:(do (x) (@context instanceEval:x)))
+    ((@after list) each:(do (x) (@context instanceEval:x)))
   )
 
   (- (id) run is

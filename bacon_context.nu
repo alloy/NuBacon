@@ -84,15 +84,15 @@
   )
 
   (- (id) before:(id)block is
-    (@_before << block)
+    (@_before addObject:block)
   )
   
   (- (id) after:(id)block is
-    (@_after << block)
+    (@_after addObject:block)
   )
   
   (- (id) addSpecification:(id)description withBlock:(id)block report:(id)report is
     (set specification ((BaconSpecification alloc) initWithContext:self description:description block:block before:@_before after:@_after report:report))
-    (@_specifications << specification)
+    (@_specifications addObject:specification)
   )
 )

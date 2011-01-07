@@ -35,7 +35,7 @@
       )
       (else
         ; this is a selector without args, so remove it from the messages list and continue
-        (__messagesWithoutArgs << __message)
+        (__messagesWithoutArgs addObject:__message)
         (set __messages (cdr __messages))
       )
     )
