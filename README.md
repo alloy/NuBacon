@@ -68,6 +68,13 @@ Whirl-wind tour
         (-> (@otherArray << "soup") should change:(do () (@otherArray count)) by:+1)
       ))
 
+      (it "performs a long running operation" (do ()
+        (@otherArray performSelector:"addObject:" withObject:"soup" afterDelay:0.5)
+        (wait 0.6 (do ()
+          (~ (@otherArray count) should be:2)
+        ))
+      ))
+
       ; Custom assertions are trivial to do, they are blocks returning
       ; a boolean value. The block is defined at the top.
       (it "uses a custom assertion to check if the array is empty" (do ()
@@ -80,7 +87,7 @@ Whirl-wind tour
       ))
     ))
 
-    ($BaconSummary print)
+    ((Bacon sharedInstance) run)
 
 Now run it:
 
@@ -92,13 +99,13 @@ Now run it:
     - raises when trying to fetch an element
     - compares to another object
     - changes the count when adding objects
+    - performs a long running operation
     - uses a custom assertion to check if the array is empty
     - has super powers [FAILURE]
 
     An array - has super powers: flunked [FAILURE]
 
-    7 specifications (13 requirements), 1 failures, 0 errors
-
+    8 specifications (14 requirements), 1 failures, 0 errors
 
 Implemented assertions
 ----------------------
@@ -197,6 +204,29 @@ You can define shared contexts in NuBacon like this:
 These contexts are not executed on their own, but can be included with
 behaves_like in other contexts.  You can use shared contexts to
 structure suites with many recurring specifications.
+
+
+The `wait` macro
+----------------
+
+Often in Objective-C apps, code will __not__ execute immediately, but
+scheduled on a runloop for later execution. Therefor a mechanism is
+needed that will postpone execution of some assertions for a period of
+time. This is where the `wait` macro comes in:
+
+      (it "performs a long running operation" (do ()
+        ; Here a method call is scheduled to be performed ~0.5 seconds in the future
+        (@otherArray performSelector:"addObject:" withObject:"soup" afterDelay:0.5)
+        (wait 0.6 (do ()
+          ; This block is executed ~0.6 seconds in the future
+          (~ (@otherArray count) should be:2)
+        ))
+      ))
+
+The postponed block does __not__ halt the thread, but is scheduled on
+the runloop as well. This means that your runloop based code will have
+a chance to perform its job before the assertions in the block are
+executed.
 
 
 Helper macros

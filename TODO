@@ -1,4 +1,3 @@
-* Write to the README about runloop/wait
 * Add inline docs to code, or however the Nu way is for API docs
 * Check what the best way is to terminate the app
 * Check if it plays nice when there's already a runloop, eg in a (iOS) app runner

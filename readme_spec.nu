@@ -34,6 +34,13 @@
         (-> (@otherArray << "soup") should change:(do () (@otherArray count)) by:+1)
       ))
 
+      (it "performs a long running operation" (do ()
+        (@otherArray performSelector:"addObject:" withObject:"soup" afterDelay:0.5)
+        (wait 0.6 (do ()
+          (~ (@otherArray count) should be:2)
+        ))
+      ))
+
       ; Custom assertions are trivial to do, they are blocks returning
       ; a boolean value. The block is defined at the top.
       (it "uses a custom assertion to check if the array is empty" (do ()
@@ -46,4 +53,4 @@
       ))
     ))
 
-    ($BaconSummary print)
+    ((Bacon sharedInstance) run)
