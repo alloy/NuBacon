@@ -53,15 +53,15 @@
   )
 )
 
-(macro describe (name requirements)
+(macro describe (name specifications)
   `(try
     (set parent self)
-    (parent childContextWithName:,name requirements:,requirements)
+    (parent childContextWithName:,name specifications:,specifications)
     (catch (e)
       (if (eq (e reason) "undefined symbol self while evaluating expression (set parent self)")
         (then
           ; not running inside a context
-          ((BaconContext alloc) initWithName:,name requirements:,requirements)
+          ((BaconContext alloc) initWithName:,name specifications:,specifications)
         )
         ; another type of exception occured
         (else (throw e))
@@ -71,7 +71,7 @@
 )
 
 (macro it (description block)
-  `(self requirement:,description block:,block report:t)
+  `(self addSpecification:,description withBlock:,block report:t)
 )
 
 (macro before (block)
@@ -85,19 +85,19 @@
 
 (set $BaconShared (NSMutableDictionary dictionary))
 
-(macro shared (name requirements)
-  `($BaconShared setValue:,requirements forKey:,name)
+(macro shared (name specifications)
+  `($BaconShared setValue:,specifications forKey:,name)
 )
 
 (macro behaves_like (name)
   (set context ($BaconShared valueForKey:name))
   (if (context)
-    ; each requirement is a complete `it' block
-    (then (context each: (do (requirement) (eval requirement))))
+    ; each specification is a complete `it' block
+    (then (context each: (do (specification) (eval specification))))
     (else (throw "No such context `#{name}'"))
   )
 )
 
 (macro wait (seconds block)
-  `((self currentRequirement) wait:,seconds thenRunBlock:,block)
+  `((self currentSpecification) postponeBlock:,block withDelay:,seconds)
 )

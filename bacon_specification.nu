@@ -1,4 +1,4 @@
-(class BaconRequirement is NSObject
+(class BaconSpecification is NSObject
   (ivars (id) context
          (id) description
          (id) block
@@ -43,19 +43,22 @@
     (set numberOfRequirementsBefore ($BaconSummary requirements))
     
     (try
-      (try ; wrap before/requirement/after
+      (try
+        ; before
         (self runBeforeFilters)
+        ; specification
         (@context instanceEval:@block)
         (if (eq numberOfRequirementsBefore ($BaconSummary requirements))
-          ; the requirement did not contain any assertions, so it flunked
+          ; the specification did not contain any requirements, so it flunked
           (throw ((BaconError alloc) initWithDescription:"flunked"))
         )
+        ; after
         (catch (e)
           ; don't allow after filters to throw, as it could result in an endless loop
           (self runAfterFiltersAndThrow:nil)
           (throw e)
         )
-        ; ensure the after filters are always run, these however may throw, as we already ran the requirement
+        ; ensure the after filters are always run, these however may throw, as we already ran the specification
         (self runAfterFiltersAndThrow:t)
       )
       (catch (e) ; now really handle the bubbled exception
@@ -79,24 +82,20 @@
     (if (@report) (print "\n"))
 
     (unless @hasPostponedBlock
-      ;(puts "will finish requirement!")
-      (@context requirementDidFinish:self)
+      (@context specificationDidFinish:self)
     )
   )
 
-  (- (id) wait:(id)seconds thenRunBlock:(id)block is
+  (- (id) postponeBlock:(id)block withDelay:(id)seconds is
     (set @postponedBlock block)
     (set @hasPostponedBlock t)
-    ;(puts "SCHEDULING POSTPONED BLOCK!")
     (self performSelector:"runPostponedBlock" withObject:nil afterDelay:seconds)
     ; TODO is it correct that I need to call this here, again?!
     ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:seconds))
   )
 
   (- (id) runPostponedBlock is
-    ;(puts "GONNA RUN POSTPONED BLOCK!")
-    ; TODO this needs to be run inside try-catch blocks and after filters should be run after this!
     (@context instanceEval:@postponedBlock)
-    (@context requirementDidFinish:self)
+    (@context specificationDidFinish:self)
   )
 )

@@ -1,97 +1,96 @@
 (class BaconContext is NSObject
   ; use the dynamic `ivars' so the user can add ivars in before/after
-  (ivars (id) name
-         (id) before
-         (id) after
-         (id) requirements
-         (id) printedName
-         (id) delegate
-         (id) currentRequirementIndex)
+  (ivars (id) _name
+         (id) _before
+         (id) _after
+         (id) _specifications
+         (id) _printedName
+         (id) _delegate
+         (id) _currentSpecificationIndex)
   
-  (- (id) initWithName:(id)name requirements:(id)requirements is
-    (self initWithName:name before:nil after:nil requirements:requirements)
+  (- (id) initWithName:(id)name specifications:(id)specifications is
+    (self initWithName:name before:nil after:nil specifications:specifications)
   )
 
-  (- (id) initWithName:(id)name before:(id)beforeFilters after:(id)afterFilters requirements:(id)requirements is
+  (- (id) initWithName:(id)name before:(id)beforeFilters after:(id)afterFilters specifications:(id)specifications is
     (self init)
 
-    ; register this context *before* evalling the requirements list, which may contain nested contexts
+    ; register this context *before* evalling the specifications list, which may contain nested contexts
     ; that have to be after this one in the contexts list
     ((Bacon sharedInstance) addContext:self)
 
     (if (beforeFilters)
-      (then (set @before (beforeFilters mutableCopy)))
-      (else (set @before (NSMutableArray array)))
+      (then (set @_before (beforeFilters mutableCopy)))
+      (else (set @_before (NSMutableArray array)))
     )
     (if (afterFilters)
-      (then (set @after (afterFilters mutableCopy)))
-      (else (set @after (NSMutableArray array)))
+      (then (set @_after (afterFilters mutableCopy)))
+      (else (set @_after (NSMutableArray array)))
     )
 
-    (set @name name)
-    (set @printedName nil)
-    (set @currentRequirementIndex 0)
+    (set @_name name)
+    (set @_printedName nil)
+    (set @_currentSpecificationIndex 0)
 
-    (set @requirements (NSMutableArray array))
-    (requirements each:(do (x) (eval x))) ; create a BaconRequirement for each entry in the quoted list
+    (set @_specifications (NSMutableArray array))
+    (specifications each:(do (x) (eval x))) ; create a BaconSpecification for each entry in the quoted list
 
     self
   )
 
-  (- (id) childContextWithName:(id)childName requirements:(id)requirements is
-    ((BaconContext alloc) initWithName:"#{@name} #{childName}" before:@before after:@after requirements:requirements)
+  (- (id) childContextWithName:(id)childName specifications:(id)specifications is
+    ((BaconContext alloc) initWithName:"#{@_name} #{childName}" before:@_before after:@_after specifications:specifications)
   )
   
-  (- (id) name is @name)
+  (- (id) name is @_name)
   
   (- (id) setDelegate:(id)delegate is
-    (set @delegate delegate)
+    (set @_delegate delegate)
   )
   
   (- (id) run is
     ; TODO
     (set report t)
     (if (report)
-      (unless (@printedName)
-        (set @printedName t)
-        (puts "\n#{@name}")
+      (unless (@_printedName)
+        (set @_printedName t)
+        (puts "\n#{@_name}")
       )
     )
 
-    (set requirement (self currentRequirement))
-    (requirement performSelector:"run" withObject:nil afterDelay:0)
-
+    (set specification (self currentSpecification))
+    (specification performSelector:"run" withObject:nil afterDelay:0)
     ; TODO is it correct that I need to call this here, again?!
     ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
   )
 
-  (- (id) currentRequirement is
-    (@requirements objectAtIndex:@currentRequirementIndex)
+  (- (id) currentSpecification is
+    (@_specifications objectAtIndex:@_currentSpecificationIndex)
   )
   
-  (- (id) requirementDidFinish:(id)requirement is
-    (if (< (+ @currentRequirementIndex 1) (@requirements count))
+  (- (id) specificationDidFinish:(id)specification is
+    (if (< (+ @_currentSpecificationIndex 1) (@_specifications count))
       (then
-        (set @currentRequirementIndex (+ @currentRequirementIndex 1))
+        (set @_currentSpecificationIndex (+ @_currentSpecificationIndex 1))
         (self run)
       )
       (else
         ; DONE!
-        (@delegate contextDidFinish:self)
+        (@_delegate contextDidFinish:self)
       )
     )
   )
 
   (- (id) before:(id)block is
-    (@before << block)
+    (@_before << block)
   )
   
   (- (id) after:(id)block is
-    (@after << block)
+    (@_after << block)
   )
   
-  (- (id) requirement:(id)description block:(id)block report:(id)report is
-    (set requirement ((BaconRequirement alloc) initWithContext:self description:description block:block before:@before after:@after report:report))
-    (@requirements << requirement)
+  (- (id) addSpecification:(id)description withBlock:(id)block report:(id)report is
+    (set specification ((BaconSpecification alloc) initWithContext:self description:description block:block before:@_before after:@_after report:report))
+    (@_specifications << specification)
   )
 )

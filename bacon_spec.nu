@@ -9,8 +9,8 @@
   )
 )
 
-(macro createRequirement (description block report)
-  `((BaconRequirement alloc) initWithContext:self
+(macro createSpecification (description block report)
+  `((BaconSpecification alloc) initWithContext:self
                                  description:,description
                                        block:,block
                                       before:emptyArray
@@ -50,13 +50,13 @@
   ))
   
   (it "catches any type of exception so the spec suite can continue" (do ()
-    (-> ((createRequirement "throws" (do () throw "ohnoes") nil) run) should not raise)
+    (-> ((createSpecification "throws" (do () throw "ohnoes") nil) run) should not raise)
   ))
   
   ; NOTE: this requirement will print that the requirement failed/flunked, but in fact it does not!
   (it "flunks a requirement if it contains no assertions" (do ()
     (set numberOfFailuresBefore ($BaconSummary failures))
-    ((createRequirement "flunks" (do ()) t) run)
+    ((createSpecification "flunks" (do ()) t) run)
     (~ ($BaconSummary failures) should equal:(+ numberOfFailuresBefore 1))
     (($BaconSummary valueForIvar:"counters") setValue:numberOfFailuresBefore forKey:"failures")
   ))
