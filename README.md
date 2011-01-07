@@ -28,6 +28,8 @@ Or as a git clone:
     $ cd NuBacon
     $ git checkout 0.1
 
+Or checkout master if you’re feeling adventurous. The runloop code,
+for instance, is not yet available in a release.
 
 Whirl-wind tour
 ---------------
