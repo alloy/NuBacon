@@ -206,7 +206,7 @@ behaves_like in other contexts.  You can use shared contexts to
 structure suites with many recurring specifications.
 
 
-The `wait` macro
+The ‘wait’ macro
 ----------------
 
 Often in Objective-C apps, code will __not__ execute immediately, but
