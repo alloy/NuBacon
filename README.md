@@ -228,6 +228,8 @@ the runloop as well. This means that your runloop based code will have
 a chance to perform its job before the assertions in the block are
 executed.
 
+You can schedule as many blocks as you’d want and even nest them.
+
 
 Helper macros
 -------------
