@@ -19,7 +19,6 @@
 
   (- addContext:(id)context is
     (@contexts << context)
-    ;(puts (@contexts description))
   )
 
   (- (id) run is
@@ -28,8 +27,9 @@
     (context performSelector:"run" withObject:nil afterDelay:0)
     ; TODO check if this is really the right way to do it?
     ; TODO make this work nicely when there is already a runloop, like in an (iOS) app runner
-    ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
-    ;((NSApplication sharedApplication) run)
+    ;((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
+    ;((NSRunLoop mainRunLoop) runUntilDate:(NSDate distantFuture))
+    ((NSApplication sharedApplication) run)
   )
 
   (- (id) currentContext is
@@ -44,9 +44,8 @@
       )
       (else
         ; DONE!
-        ;((NSApplication sharedApplication) stop:self)
-        ;(set modes (`("NSDefaultRunLoopMode") array))
-        ;((NSRunLoop mainRunLoop) performSelector:"terminate:" target:(NSApplication sharedApplication) argument:self order:1000 modes:modes)
+        ($BaconSummary print)
+        ((NSApplication sharedApplication) terminate:self)
       )
     )
   )

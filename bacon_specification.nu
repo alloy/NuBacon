@@ -2,22 +2,28 @@
   (ivars (id) context
          (id) description
          (id) block
-         (id) postponedBlock
-         (id) hasPostponedBlock
          (id) before
          (id) after
-         (id) report)
+         (id) report
+         (id) exceptionOccurred
+         (id) postponedBlocksCount
+         (id) numberOfRequirementsBefore)
 
   (- (id) initWithContext:(id)context description:(id)description block:(id)block before:(id)beforeFilters after:(id)afterFilters report:(id)report is
     (self init)
+
     (set @context context)
     (set @description description)
     (set @block block)
-    (set @hasPostponedBlock nil)
     (set @report report)
+
+    (set @postponedBlocksCount 0)
+    (set @exceptionOccurred nil)
+
     ; create copies so that when the given arrays change later on, they don't change these
     (set @before (beforeFilters copy))
     (set @after (afterFilters copy))
+
     self
   )
 
@@ -25,13 +31,8 @@
     (@before each:(do (x) (@context instanceEval:x)))
   )
 
-  (- (id) runAfterFiltersAndThrow:(id)shouldThrow is
-    (try
-      (@after each:(do (x) (@context instanceEval:x)))
-      (catch (e)
-        (if (shouldThrow) (throw e))
-      )
-    )
+  (- (id) runAfterFilters is
+    (@after each:(do (x) (@context instanceEval:x)))
   )
 
   (- (id) run is
@@ -40,28 +41,22 @@
       (print "- #{@description}")
     )
     
-    (set numberOfRequirementsBefore ($BaconSummary requirements))
-    
+    (set @numberOfRequirementsBefore ($BaconSummary requirements))
+
+    (self executeBlock:(do ()
+      (self runBeforeFilters)
+      ; run actual specification
+      (@context instanceEval:@block)
+    ))
+
+    (if (eq @postponedBlocksCount 0) (self finalize))
+  )
+
+  (- executeBlock:(id)block is
     (try
-      (try
-        ; before
-        (self runBeforeFilters)
-        ; specification
-        (@context instanceEval:@block)
-        (if (eq numberOfRequirementsBefore ($BaconSummary requirements))
-          ; the specification did not contain any requirements, so it flunked
-          (throw ((BaconError alloc) initWithDescription:"flunked"))
-        )
-        ; after
-        (catch (e)
-          ; don't allow after filters to throw, as it could result in an endless loop
-          (self runAfterFiltersAndThrow:nil)
-          (throw e)
-        )
-        ; ensure the after filters are always run, these however may throw, as we already ran the specification
-        (self runAfterFiltersAndThrow:t)
-      )
-      (catch (e) ; now really handle the bubbled exception
+      (call block)
+      (catch (e)
+        (set @exceptionOccurred t)
         (if (@report)
           (if (eq (e class) BaconError)
             (then
@@ -78,25 +73,39 @@
         )
       )
     )
-
-    (unless @hasPostponedBlock (self finalize))
   )
 
   (- (id) postponeBlock:(id)block withDelay:(id)seconds is
-    (set @postponedBlock block)
-    (set @hasPostponedBlock t)
-    (self performSelector:"runPostponedBlock" withObject:nil afterDelay:seconds)
-    ; TODO is it correct that I need to call this here, again?!
-    ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:seconds))
+    ; If an exception occurred, we definitely don't need to schedule any more blocks
+    (unless (@exceptionOccurred)
+      (set @postponedBlocksCount (+ @postponedBlocksCount 1))
+      (self performSelector:"runPostponedBlock:" withObject:block afterDelay:seconds)
+      ; TODO
+      ;((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:seconds))
+    )
   )
 
-  (- (id) runPostponedBlock is
-    (@context instanceEval:@postponedBlock)
-    (self finalize)
+  (- (id) runPostponedBlock:(id)block is
+    ; If an exception occurred, we definitely don't need execute any more blocks
+    (unless (@exceptionOccurred)
+      (self executeBlock:(do () (@context instanceEval:block)))
+    )
+    (set @postponedBlocksCount (- @postponedBlocksCount 1))
+    (if (eq @postponedBlocksCount 0) (self finalize))
   )
 
   (- (id) finalize is
+    (self executeBlock:(do () (self runAfterFilters)))
+
+    (if (eq @numberOfRequirementsBefore ($BaconSummary requirements))
+      ; the specification did not contain any requirements, so it flunked
+      ; TODO ugh, exceptions for control flow, need to clean this up
+      (self executeBlock:(do () (throw ((BaconError alloc) initWithDescription:"flunked"))))
+    )
+
     (if (@report) (print "\n"))
-    (@context specificationDidFinish:self)
+    (if (@context respondsToSelector:"specificationDidFinish:")
+      (@context specificationDidFinish:self)
+    )
   )
 )

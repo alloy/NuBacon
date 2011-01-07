@@ -60,8 +60,8 @@
 
     (set specification (self currentSpecification))
     (specification performSelector:"run" withObject:nil afterDelay:0)
-    ; TODO is it correct that I need to call this here, again?!
-    ((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
+    ; TODO
+    ;((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
   )
 
   (- (id) currentSpecification is
@@ -76,7 +76,9 @@
       )
       (else
         ; DONE!
-        (@_delegate contextDidFinish:self)
+        (if (@_delegate respondsToSelector:"contextDidFinish:")
+          (@_delegate contextDidFinish:self)
+        )
       )
     )
   )

@@ -10,7 +10,7 @@
 )
 
 (macro createSpecification (description block report)
-  `((BaconSpecification alloc) initWithContext:self
+  `((BaconSpecification alloc) initWithContext:dummyContext
                                  description:,description
                                        block:,block
                                       before:emptyArray
@@ -33,12 +33,17 @@
   )
 )
 
+(class DummyContext is NSObject
+  (- (id) name is "Dummy context")
+)
+
 ; Just some test constants
 (set equalFoo (do (x) (eq x "foo")))
 (set equalBar (do (x) (eq x "bar")))
 (set aRequirement ("foo" should))
 (set emptyArray (NSArray array))
 (set notEmptyArray (`("foo") array))
+(set dummyContext (DummyContext new))
 
 (describe "An instance of BaconShould" `(
   (it "raises a BaconError if the assertion fails" (do ()
@@ -247,12 +252,21 @@
   ))
 
   (it "includes the `wait' macro, which schedules the given block to run after n seconds, this will halt any further requirement execution as well" (do ()
-    (set startedAt (NSDate date))
+    (set startedAt1 (NSDate date))
+    (set startedAt2 (NSDate date))
+    (set startedAt3 (NSDate date))
     (set numberOfSpecsBefore ($BaconSummary specifications))
+
+    (wait 0.5 (do ()
+      (~ ((NSDate date) timeIntervalSinceDate:startedAt1) should be closeTo:0.5 delta:0.01)
+    ))
     (wait 1 (do ()
-      (~ ((NSDate date) timeIntervalSinceDate:startedAt) should be closeTo:1 delta:0.01)
-      ; no other specs should have ran in the meantime!
-      (~ ($BaconSummary specifications) should be:numberOfSpecsBefore)
+      (~ ((NSDate date) timeIntervalSinceDate:startedAt2) should be closeTo:1 delta:0.01)
+      (wait 1.5 (do ()
+        (~ ((NSDate date) timeIntervalSinceDate:startedAt3) should be closeTo:2.5 delta:0.01)
+        ; no other specs should have ran in the meantime!
+        (~ ($BaconSummary specifications) should be:numberOfSpecsBefore)
+      ))
     ))
   ))
 
@@ -406,4 +420,4 @@
 ;))
 
 ((Bacon sharedInstance) run)
-($BaconSummary print)
+;($BaconSummary print)
