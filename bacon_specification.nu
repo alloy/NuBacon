@@ -78,12 +78,8 @@
         )
       )
     )
-    
-    (if (@report) (print "\n"))
 
-    (unless @hasPostponedBlock
-      (@context specificationDidFinish:self)
-    )
+    (unless @hasPostponedBlock (self finalize))
   )
 
   (- (id) postponeBlock:(id)block withDelay:(id)seconds is
@@ -96,6 +92,11 @@
 
   (- (id) runPostponedBlock is
     (@context instanceEval:@postponedBlock)
+    (self finalize)
+  )
+
+  (- (id) finalize is
+    (if (@report) (print "\n"))
     (@context specificationDidFinish:self)
   )
 )
