@@ -89,11 +89,11 @@
   )
 
   (- (id) stringValue is
-    (set d (self description))
-    (set c ((self class) name))
-    (if (d hasPrefix:"<#{c}")
-      (then d)
-      (else "#{(self class)}: #{(self description)}")
+    (set description (self description))
+    (set className ((self class) name))
+    (if (description hasPrefix:"<#{className}")
+      (then description)
+      (else "#{className}: #{description}")
     )
   )
 
