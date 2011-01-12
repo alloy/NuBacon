@@ -206,6 +206,15 @@
     (catch-failure (-> (set x x) should change:valueBlock by:-1))
     (~ (failure reason) should equal:"expected `(do () ((set x x)))' to change `(x)' by `-1'")
     
+    (set o1 (NSObject new))
+    (set o2 (NSObject new))
+    (catch-failure (~ o1 should equal:o2))
+    (~ (failure reason) should equal:"expected `#{(o1 description)}' to equal `#{(o2 description)}'")
+    
+    (set otherArray (`("bar") array))
+    (catch-failure (~ notEmptyArray should equal:otherArray))
+    (~ (failure reason) should equal:"expected `NSCFArray: #{(notEmptyArray description)}' to equal `NSCFArray: #{(otherArray description)}'")
+    
     (catch-failure (~ "foo" should be isEqualToString:"bar"))
     (~ (failure reason) should equal:"expected `foo' to be isEqualToString:(\"bar\")")
     

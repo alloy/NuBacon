@@ -88,7 +88,15 @@
     (send block evalWithArguments:nil context:c self:self)
   )
 
+  (- (id) stringValue is
+    (set d (self description))
+    (set c ((self class) name))
+    (if (d hasPrefix:"<#{c}")
+      (then d)
+      (else "#{(self class)}: #{(self description)}")
+    )
+  )
+
   (- (id) should is ((BaconShould alloc) initWithObject:self))
   (- (id) should:(id)block is (((BaconShould alloc) initWithObject:self) satisfy:nil block:block))
 )
-
