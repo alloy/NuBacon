@@ -49,6 +49,10 @@
       (else (@errorLog appendString:(e description)))
     )
     (@errorLog appendString:"#{type}\n")
+    (if (e respondsToSelector:"callStackSymbols")
+      (((e callStackSymbols) list) each:(do (entry) (@errorLog appendString:"\t#{entry}\n")))
+      (@errorLog appendString:"\n")
+    )
   )
   
   (- (id) print is

@@ -19,7 +19,10 @@
       ))
 
       (it "raises when trying to fetch an element" (do ()
+(@ary objectAtIndex:0) 
         (set exception (-> (@ary objectAtIndex:0) should raise:"NSRangeException"))
+        ;(puts (exception reason))
+        ;(((exception callStackSymbols) list) each:(do (line) (puts line)))
         (~ (exception reason) should match:/beyond bounds/)
       ))
 
