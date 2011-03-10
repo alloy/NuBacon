@@ -27,19 +27,15 @@
         (set context (self currentContext))
         (context setDelegate:self)
         (context performSelector:"run" withObject:nil afterDelay:0)
-        ; TODO check if this is really the right way to do it?
-        ; TODO make this work nicely when there is already a runloop, like in an (iOS) app runner
-        ;((NSRunLoop mainRunLoop) runUntilDate:(NSDate dateWithTimeIntervalSinceNow:0.1))
-        ;((NSRunLoop mainRunLoop) runUntilDate:(NSDate distantFuture))
+        ; Ensure the runloop has started
         (try
           ((NSApplication sharedApplication) run)
           (catch (e))
-          ; running on iOS most probably
         )
       )
       (else
         ; DONE
-        ($BaconSummary print)
+        (self contextDidFinish:nil)
       )
     )
   )
@@ -57,11 +53,7 @@
       (else
         ; DONE!
         ($BaconSummary print)
-        (try
-          ((NSApplication sharedApplication) terminate:self)
-          (catch (e))
-          ; running on iOS most probably
-        )
+        (exit (+ ($BaconSummary failures) ($BaconSummary errors)))
       )
     )
   )
