@@ -1,2 +1,6 @@
 *.swp
 *.swo
+.DS_Store
+iOSRunner/build
+iOSRunner/NuBacon-iOSRunner.xcodeproj/*.mode1v3
+iOSRunner/NuBacon-iOSRunner.xcodeproj/*.pbxuser

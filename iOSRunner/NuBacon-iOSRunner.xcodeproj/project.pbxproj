@@ -7,73 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
-		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		222BF10B11DE8BCD00E20A3F /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 222BF10A11DE8BCD00E20A3F /* Icon.png */; };
-		228307E011DE5E4F00A5C690 /* ffi-iphone.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307CF11DE5E4F00A5C690 /* ffi-iphone.c */; };
-		228307E111DE5E4F00A5C690 /* ffi-iphonesimulator.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307D111DE5E4F00A5C690 /* ffi-iphonesimulator.c */; };
-		228307E211DE5E4F00A5C690 /* iphone-sysv.S in Sources */ = {isa = PBXBuildFile; fileRef = 228307D911DE5E4F00A5C690 /* iphone-sysv.S */; };
-		228307E311DE5E4F00A5C690 /* iphonesimulator-darwin.S in Sources */ = {isa = PBXBuildFile; fileRef = 228307DA11DE5E4F00A5C690 /* iphonesimulator-darwin.S */; };
-		228307E511DE5E4F00A5C690 /* prep_cif.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307DC11DE5E4F00A5C690 /* prep_cif.c */; };
-		228307E611DE5E4F00A5C690 /* raw_api.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307DD11DE5E4F00A5C690 /* raw_api.c */; };
-		228307E811DE5E4F00A5C690 /* types.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307DF11DE5E4F00A5C690 /* types.c */; };
-		2283082711DE5E9D00A5C690 /* pcre_chartables.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307F311DE5E9D00A5C690 /* pcre_chartables.c */; };
-		2283082911DE5E9D00A5C690 /* pcre_compile.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307F511DE5E9D00A5C690 /* pcre_compile.c */; };
-		2283082B11DE5E9D00A5C690 /* pcre_config.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307F711DE5E9D00A5C690 /* pcre_config.c */; };
-		2283082D11DE5E9D00A5C690 /* pcre_dfa_exec.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307F911DE5E9D00A5C690 /* pcre_dfa_exec.c */; };
-		2283082F11DE5E9D00A5C690 /* pcre_exec.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307FB11DE5E9D00A5C690 /* pcre_exec.c */; };
-		2283083111DE5E9D00A5C690 /* pcre_fullinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307FD11DE5E9D00A5C690 /* pcre_fullinfo.c */; };
-		2283083311DE5E9D00A5C690 /* pcre_get.c in Sources */ = {isa = PBXBuildFile; fileRef = 228307FF11DE5E9D00A5C690 /* pcre_get.c */; };
-		2283083511DE5E9D00A5C690 /* pcre_globals.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283080111DE5E9D00A5C690 /* pcre_globals.c */; };
-		2283083711DE5E9D00A5C690 /* pcre_info.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283080311DE5E9D00A5C690 /* pcre_info.c */; };
-		2283083911DE5E9D00A5C690 /* pcre_maketables.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283080611DE5E9D00A5C690 /* pcre_maketables.c */; };
-		2283083B11DE5E9D00A5C690 /* pcre_newline.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283080811DE5E9D00A5C690 /* pcre_newline.c */; };
-		2283083D11DE5E9D00A5C690 /* pcre_ord2utf8.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283080A11DE5E9D00A5C690 /* pcre_ord2utf8.c */; };
-		2283083F11DE5E9D00A5C690 /* pcre_refcount.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283080C11DE5E9D00A5C690 /* pcre_refcount.c */; };
-		2283084111DE5E9D00A5C690 /* pcre_study.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283081011DE5E9D00A5C690 /* pcre_study.c */; };
-		2283084311DE5E9D00A5C690 /* pcre_tables.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283081211DE5E9D00A5C690 /* pcre_tables.c */; };
-		2283084511DE5E9D00A5C690 /* pcre_try_flipped.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283081411DE5E9D00A5C690 /* pcre_try_flipped.c */; };
-		2283084711DE5E9D00A5C690 /* pcre_ucd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283081611DE5E9D00A5C690 /* pcre_ucd.c */; };
-		2283084911DE5E9D00A5C690 /* pcre_valid_utf8.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283081811DE5E9D00A5C690 /* pcre_valid_utf8.c */; };
-		2283084B11DE5E9D00A5C690 /* pcre_version.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283081A11DE5E9D00A5C690 /* pcre_version.c */; };
-		2283084D11DE5E9D00A5C690 /* pcre_xclass.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283081C11DE5E9D00A5C690 /* pcre_xclass.c */; };
-		2283084F11DE5E9D00A5C690 /* pcreposix.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283082111DE5E9D00A5C690 /* pcreposix.c */; };
-		228308AE11DE5F0100A5C690 /* block.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283087411DE5F0100A5C690 /* block.m */; };
-		228308AF11DE5F0100A5C690 /* bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283087611DE5F0100A5C690 /* bridge.m */; };
-		228308B011DE5F0100A5C690 /* bridgesupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283087811DE5F0100A5C690 /* bridgesupport.m */; };
-		228308B111DE5F0100A5C690 /* cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283087A11DE5F0100A5C690 /* cell.m */; };
-		228308B211DE5F0100A5C690 /* class.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283087C11DE5F0100A5C690 /* class.m */; };
-		228308B311DE5F0100A5C690 /* dtrace.d in Sources */ = {isa = PBXBuildFile; fileRef = 2283087D11DE5F0100A5C690 /* dtrace.d */; };
-		228308B411DE5F0100A5C690 /* enumerable.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283088011DE5F0100A5C690 /* enumerable.m */; };
-		228308B511DE5F0100A5C690 /* extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283088211DE5F0100A5C690 /* extensions.m */; };
-		228308B611DE5F0100A5C690 /* handler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283088411DE5F0100A5C690 /* handler.m */; };
-		228308B711DE5F0100A5C690 /* ivars.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283088511DE5F0100A5C690 /* ivars.m */; };
-		228308B811DE5F0100A5C690 /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 2283088611DE5F0100A5C690 /* mach_override.c */; };
-		228308B911DE5F0100A5C690 /* macro_0.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283088911DE5F0100A5C690 /* macro_0.m */; };
-		228308BA11DE5F0100A5C690 /* macro_1.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283088B11DE5F0100A5C690 /* macro_1.m */; };
-		228308BB11DE5F0100A5C690 /* method.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283088D11DE5F0100A5C690 /* method.m */; };
-		228308BC11DE5F0100A5C690 /* nu.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283088E11DE5F0100A5C690 /* nu.m */; };
-		228308BD11DE5F0100A5C690 /* objc_runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283089211DE5F0100A5C690 /* objc_runtime.m */; };
-		228308BE11DE5F0100A5C690 /* object.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283089411DE5F0100A5C690 /* object.m */; };
-		228308BF11DE5F0100A5C690 /* operator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283089611DE5F0100A5C690 /* operator.m */; };
-		228308C011DE5F0100A5C690 /* overrides.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283089711DE5F0100A5C690 /* overrides.m */; };
-		228308C111DE5F0100A5C690 /* parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283089911DE5F0100A5C690 /* parser.m */; };
-		228308C211DE5F0100A5C690 /* pointer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283089B11DE5F0100A5C690 /* pointer.m */; };
-		228308C311DE5F0100A5C690 /* profiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283089D11DE5F0100A5C690 /* profiler.m */; };
-		228308C411DE5F0100A5C690 /* protocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283089E11DE5F0100A5C690 /* protocol.m */; };
-		228308C511DE5F0100A5C690 /* reference.m in Sources */ = {isa = PBXBuildFile; fileRef = 228308A011DE5F0100A5C690 /* reference.m */; };
-		228308C611DE5F0100A5C690 /* regex.m in Sources */ = {isa = PBXBuildFile; fileRef = 228308A211DE5F0100A5C690 /* regex.m */; };
-		228308C711DE5F0100A5C690 /* st.c in Sources */ = {isa = PBXBuildFile; fileRef = 228308A311DE5F0100A5C690 /* st.c */; };
-		228308C811DE5F0100A5C690 /* stack.m in Sources */ = {isa = PBXBuildFile; fileRef = 228308A611DE5F0100A5C690 /* stack.m */; };
-		228308C911DE5F0100A5C690 /* super.m in Sources */ = {isa = PBXBuildFile; fileRef = 228308A811DE5F0100A5C690 /* super.m */; };
-		228308CA11DE5F0100A5C690 /* swizzles.m in Sources */ = {isa = PBXBuildFile; fileRef = 228308A911DE5F0100A5C690 /* swizzles.m */; };
-		228308CB11DE5F0100A5C690 /* symbol.m in Sources */ = {isa = PBXBuildFile; fileRef = 228308AB11DE5F0100A5C690 /* symbol.m */; };
-		228308CC11DE5F0100A5C690 /* testhelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 228308AC11DE5F0100A5C690 /* testhelper.m */; };
-		22A2932E11DE8450008B1084 /* handlers.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A2932D11DE8450008B1084 /* handlers.m */; };
-		22E7304A11AB5E210014052A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 22E7304811AB5E210014052A /* main.m */; };
-		5167862E1291436B001CA283 /* exception.m in Sources */ = {isa = PBXBuildFile; fileRef = 5167862D1291436B001CA283 /* exception.m */; };
-		5169DB8712917CA8002517BD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5169DB8612917CA8002517BD /* CoreGraphics.framework */; };
-		5169DBD912917DD2002517BD /* bacon.nu in Resources */ = {isa = PBXBuildFile; fileRef = 5169DBD812917DD2002517BD /* bacon.nu */; };
+		518A90D0132908B6000DA4DE /* libNuBaconLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51ED140B12AE416B003E9DC2 /* libNuBaconLib.a */; };
+		518A90FE13290C0E000DA4DE /* SpecHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 518A90FD13290C0E000DA4DE /* SpecHelper.m */; };
+		518A910713290CBC000DA4DE /* bacon_context.nu in Resources */ = {isa = PBXBuildFile; fileRef = 518A910113290CBC000DA4DE /* bacon_context.nu */; };
+		518A910813290CBC000DA4DE /* bacon_macros.nu in Resources */ = {isa = PBXBuildFile; fileRef = 518A910213290CBC000DA4DE /* bacon_macros.nu */; };
+		518A910913290CBC000DA4DE /* bacon_should.nu in Resources */ = {isa = PBXBuildFile; fileRef = 518A910313290CBC000DA4DE /* bacon_should.nu */; };
+		518A910A13290CBC000DA4DE /* bacon_spec.nu in Resources */ = {isa = PBXBuildFile; fileRef = 518A910413290CBC000DA4DE /* bacon_spec.nu */; };
+		518A910B13290CBC000DA4DE /* bacon_specification.nu in Resources */ = {isa = PBXBuildFile; fileRef = 518A910513290CBC000DA4DE /* bacon_specification.nu */; };
+		518A910C13290CBC000DA4DE /* bacon_summary.nu in Resources */ = {isa = PBXBuildFile; fileRef = 518A910613290CBC000DA4DE /* bacon_summary.nu */; };
+		518A910D13290CC6000DA4DE /* bacon.nu in Resources */ = {isa = PBXBuildFile; fileRef = 5169DBD812917DD2002517BD /* bacon.nu */; };
+		518A911713290D76000DA4DE /* SpecHelper.nu in Resources */ = {isa = PBXBuildFile; fileRef = 518A911413290CF9000DA4DE /* SpecHelper.nu */; };
 		51ED141912AE422D003E9DC2 /* block.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283087411DE5F0100A5C690 /* block.m */; };
 		51ED141A12AE422D003E9DC2 /* bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283087611DE5F0100A5C690 /* bridge.m */; };
 		51ED141B12AE422D003E9DC2 /* bridgesupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2283087811DE5F0100A5C690 /* bridgesupport.m */; };
@@ -139,13 +82,21 @@
 		51ED145D12AE4239003E9DC2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5169DB8612917CA8002517BD /* CoreGraphics.framework */; };
 		51ED145E12AE4239003E9DC2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		51ED145F12AE4239003E9DC2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		51ED157212AE4735003E9DC2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 51ED157112AE4735003E9DC2 /* AppDelegate.m */; };
 		51ED157412AE4735003E9DC2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 51ED157112AE4735003E9DC2 /* AppDelegate.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		518A90CE132908AA000DA4DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 51ED140A12AE416B003E9DC2 /* NuBaconLib */;
+			remoteInfo = NuBaconLib;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* NuBacon-iOSRunner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NuBacon-iOSRunner.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		222BF10A11DE8BCD00E20A3F /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
 		228307CF11DE5E4F00A5C690 /* ffi-iphone.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ffi-iphone.c"; sourceTree = "<group>"; };
@@ -261,19 +212,27 @@
 		5167862D1291436B001CA283 /* exception.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = exception.m; sourceTree = "<group>"; };
 		5169DB8612917CA8002517BD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		5169DBD812917DD2002517BD /* bacon.nu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = bacon.nu; path = ../bacon.nu; sourceTree = "<group>"; };
+		518A90C8132908A1000DA4DE /* NuBacon-iOSRunner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NuBacon-iOSRunner.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		518A90CA132908A1000DA4DE /* NuBacon-iOSRunner-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NuBacon-iOSRunner-Info.plist"; sourceTree = "<group>"; };
+		518A90FD13290C0E000DA4DE /* SpecHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SpecHelper.m; path = Source/SpecHelpers/SpecHelper.m; sourceTree = "<group>"; };
+		518A910113290CBC000DA4DE /* bacon_context.nu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = bacon_context.nu; path = ../bacon_context.nu; sourceTree = SOURCE_ROOT; };
+		518A910213290CBC000DA4DE /* bacon_macros.nu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = bacon_macros.nu; path = ../bacon_macros.nu; sourceTree = SOURCE_ROOT; };
+		518A910313290CBC000DA4DE /* bacon_should.nu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = bacon_should.nu; path = ../bacon_should.nu; sourceTree = SOURCE_ROOT; };
+		518A910413290CBC000DA4DE /* bacon_spec.nu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = bacon_spec.nu; path = ../bacon_spec.nu; sourceTree = SOURCE_ROOT; };
+		518A910513290CBC000DA4DE /* bacon_specification.nu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = bacon_specification.nu; path = ../bacon_specification.nu; sourceTree = SOURCE_ROOT; };
+		518A910613290CBC000DA4DE /* bacon_summary.nu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = bacon_summary.nu; path = ../bacon_summary.nu; sourceTree = SOURCE_ROOT; };
+		518A911413290CF9000DA4DE /* SpecHelper.nu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SpecHelper.nu; path = Source/SpecHelpers/SpecHelper.nu; sourceTree = "<group>"; };
 		51ED140B12AE416B003E9DC2 /* libNuBaconLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNuBaconLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		51ED157012AE4735003E9DC2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		51ED157112AE4735003E9DC2 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+		518A90C6132908A1000DA4DE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
-				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
-				5169DB8712917CA8002517BD /* CoreGraphics.framework in Frameworks */,
+				518A90D0132908B6000DA4DE /* libNuBaconLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,8 +252,8 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* NuBacon-iOSRunner.app */,
 				51ED140B12AE416B003E9DC2 /* libNuBaconLib.a */,
+				518A90C8132908A1000DA4DE /* NuBacon-iOSRunner.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -440,6 +399,7 @@
 		22E7304411AB5E210014052A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				51DB3B7112967E3400027005 /* SpecHelpers */,
 				2283087211DE5F0100A5C690 /* objc */,
 				228307EF11DE5E9D00A5C690 /* pcre */,
 				228307CE11DE5E4F00A5C690 /* libffi */,
@@ -462,13 +422,13 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				51DB3B7112967E3400027005 /* SpecHelpers */,
 				5169DBDC12917DE4002517BD /* Spec */,
 				5169DBCF12917D58002517BD /* NuSource */,
 				22E7304411AB5E210014052A /* Source */,
 				22C003A211AB604B009E6408 /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				518A90CA132908A1000DA4DE /* NuBacon-iOSRunner-Info.plist */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -495,6 +455,12 @@
 			isa = PBXGroup;
 			children = (
 				5169DBD812917DD2002517BD /* bacon.nu */,
+				518A910113290CBC000DA4DE /* bacon_context.nu */,
+				518A910213290CBC000DA4DE /* bacon_macros.nu */,
+				518A910313290CBC000DA4DE /* bacon_should.nu */,
+				518A910413290CBC000DA4DE /* bacon_spec.nu */,
+				518A910513290CBC000DA4DE /* bacon_specification.nu */,
+				518A910613290CBC000DA4DE /* bacon_summary.nu */,
 			);
 			name = NuSource;
 			sourceTree = "<group>";
@@ -509,8 +475,11 @@
 		51DB3B7112967E3400027005 /* SpecHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				518A90FD13290C0E000DA4DE /* SpecHelper.m */,
+				518A911413290CF9000DA4DE /* SpecHelper.nu */,
 			);
 			name = SpecHelpers;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -526,21 +495,22 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* NuBacon-iOSRunner */ = {
+		518A90C7132908A1000DA4DE /* NuBacon-iOSRunner */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "NuBacon-iOSRunner" */;
+			buildConfigurationList = 518A90CD132908A2000DA4DE /* Build configuration list for PBXNativeTarget "NuBacon-iOSRunner" */;
 			buildPhases = (
-				1D60588D0D05DD3D006BFB54 /* Resources */,
-				1D60588E0D05DD3D006BFB54 /* Sources */,
-				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+				518A90C4132908A1000DA4DE /* Resources */,
+				518A90C5132908A1000DA4DE /* Sources */,
+				518A90C6132908A1000DA4DE /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				518A90CF132908AA000DA4DE /* PBXTargetDependency */,
 			);
 			name = "NuBacon-iOSRunner";
-			productName = NuApp;
-			productReference = 1D6058910D05DD3D006BFB54 /* NuBacon-iOSRunner.app */;
+			productName = "NuBacon-iOSRunner";
+			productReference = 518A90C8132908A1000DA4DE /* NuBacon-iOSRunner.app */;
 			productType = "com.apple.product-type.application";
 		};
 		51ED140A12AE416B003E9DC2 /* NuBaconLib */ = {
@@ -579,92 +549,36 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* NuBacon-iOSRunner */,
 				51ED140A12AE416B003E9DC2 /* NuBaconLib */,
+				518A90C7132908A1000DA4DE /* NuBacon-iOSRunner */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+		518A90C4132908A1000DA4DE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				222BF10B11DE8BCD00E20A3F /* Icon.png in Resources */,
-				5169DBD912917DD2002517BD /* bacon.nu in Resources */,
+				518A910D13290CC6000DA4DE /* bacon.nu in Resources */,
+				518A910713290CBC000DA4DE /* bacon_context.nu in Resources */,
+				518A910813290CBC000DA4DE /* bacon_macros.nu in Resources */,
+				518A910913290CBC000DA4DE /* bacon_should.nu in Resources */,
+				518A910A13290CBC000DA4DE /* bacon_spec.nu in Resources */,
+				518A910B13290CBC000DA4DE /* bacon_specification.nu in Resources */,
+				518A910C13290CBC000DA4DE /* bacon_summary.nu in Resources */,
+				518A911713290D76000DA4DE /* SpecHelper.nu in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+		518A90C5132908A1000DA4DE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				51ED157212AE4735003E9DC2 /* AppDelegate.m in Sources */,
-				22E7304A11AB5E210014052A /* main.m in Sources */,
-				228307E011DE5E4F00A5C690 /* ffi-iphone.c in Sources */,
-				228307E111DE5E4F00A5C690 /* ffi-iphonesimulator.c in Sources */,
-				228307E211DE5E4F00A5C690 /* iphone-sysv.S in Sources */,
-				228307E311DE5E4F00A5C690 /* iphonesimulator-darwin.S in Sources */,
-				228307E511DE5E4F00A5C690 /* prep_cif.c in Sources */,
-				228307E611DE5E4F00A5C690 /* raw_api.c in Sources */,
-				228307E811DE5E4F00A5C690 /* types.c in Sources */,
-				2283082711DE5E9D00A5C690 /* pcre_chartables.c in Sources */,
-				2283082911DE5E9D00A5C690 /* pcre_compile.c in Sources */,
-				2283082B11DE5E9D00A5C690 /* pcre_config.c in Sources */,
-				2283082D11DE5E9D00A5C690 /* pcre_dfa_exec.c in Sources */,
-				2283082F11DE5E9D00A5C690 /* pcre_exec.c in Sources */,
-				2283083111DE5E9D00A5C690 /* pcre_fullinfo.c in Sources */,
-				2283083311DE5E9D00A5C690 /* pcre_get.c in Sources */,
-				2283083511DE5E9D00A5C690 /* pcre_globals.c in Sources */,
-				2283083711DE5E9D00A5C690 /* pcre_info.c in Sources */,
-				2283083911DE5E9D00A5C690 /* pcre_maketables.c in Sources */,
-				2283083B11DE5E9D00A5C690 /* pcre_newline.c in Sources */,
-				2283083D11DE5E9D00A5C690 /* pcre_ord2utf8.c in Sources */,
-				2283083F11DE5E9D00A5C690 /* pcre_refcount.c in Sources */,
-				2283084111DE5E9D00A5C690 /* pcre_study.c in Sources */,
-				2283084311DE5E9D00A5C690 /* pcre_tables.c in Sources */,
-				2283084511DE5E9D00A5C690 /* pcre_try_flipped.c in Sources */,
-				2283084711DE5E9D00A5C690 /* pcre_ucd.c in Sources */,
-				2283084911DE5E9D00A5C690 /* pcre_valid_utf8.c in Sources */,
-				2283084B11DE5E9D00A5C690 /* pcre_version.c in Sources */,
-				2283084D11DE5E9D00A5C690 /* pcre_xclass.c in Sources */,
-				2283084F11DE5E9D00A5C690 /* pcreposix.c in Sources */,
-				228308AE11DE5F0100A5C690 /* block.m in Sources */,
-				228308AF11DE5F0100A5C690 /* bridge.m in Sources */,
-				228308B011DE5F0100A5C690 /* bridgesupport.m in Sources */,
-				228308B111DE5F0100A5C690 /* cell.m in Sources */,
-				228308B211DE5F0100A5C690 /* class.m in Sources */,
-				228308B311DE5F0100A5C690 /* dtrace.d in Sources */,
-				228308B411DE5F0100A5C690 /* enumerable.m in Sources */,
-				228308B511DE5F0100A5C690 /* extensions.m in Sources */,
-				228308B611DE5F0100A5C690 /* handler.m in Sources */,
-				228308B711DE5F0100A5C690 /* ivars.m in Sources */,
-				228308B811DE5F0100A5C690 /* mach_override.c in Sources */,
-				228308B911DE5F0100A5C690 /* macro_0.m in Sources */,
-				228308BA11DE5F0100A5C690 /* macro_1.m in Sources */,
-				228308BB11DE5F0100A5C690 /* method.m in Sources */,
-				228308BC11DE5F0100A5C690 /* nu.m in Sources */,
-				228308BD11DE5F0100A5C690 /* objc_runtime.m in Sources */,
-				228308BE11DE5F0100A5C690 /* object.m in Sources */,
-				228308BF11DE5F0100A5C690 /* operator.m in Sources */,
-				228308C011DE5F0100A5C690 /* overrides.m in Sources */,
-				228308C111DE5F0100A5C690 /* parser.m in Sources */,
-				228308C211DE5F0100A5C690 /* pointer.m in Sources */,
-				228308C311DE5F0100A5C690 /* profiler.m in Sources */,
-				228308C411DE5F0100A5C690 /* protocol.m in Sources */,
-				228308C511DE5F0100A5C690 /* reference.m in Sources */,
-				228308C611DE5F0100A5C690 /* regex.m in Sources */,
-				228308C711DE5F0100A5C690 /* st.c in Sources */,
-				228308C811DE5F0100A5C690 /* stack.m in Sources */,
-				228308C911DE5F0100A5C690 /* super.m in Sources */,
-				228308CA11DE5F0100A5C690 /* swizzles.m in Sources */,
-				228308CB11DE5F0100A5C690 /* symbol.m in Sources */,
-				228308CC11DE5F0100A5C690 /* testhelper.m in Sources */,
-				22A2932E11DE8450008B1084 /* handlers.m in Sources */,
-				5167862E1291436B001CA283 /* exception.m in Sources */,
+				518A90FE13290C0E000DA4DE /* SpecHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -740,31 +654,65 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		518A90CF132908AA000DA4DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 51ED140A12AE416B003E9DC2 /* NuBaconLib */;
+			targetProxy = 518A90CE132908AA000DA4DE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
-		1D6058940D05DD3E006BFB54 /* Debug */ = {
+		518A90CB132908A2000DA4DE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/Main/Prefix.pch;
-				INFOPLIST_FILE = Resources/Info.plist;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "NuBacon-iOSRunner-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+					"-ObjC",
+					"-all_load",
+				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "NuBacon-iOSRunner";
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
-		1D6058950D05DD3E006BFB54 /* Release */ = {
+		518A90CC132908A2000DA4DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/Main/Prefix.pch;
-				INFOPLIST_FILE = Resources/Info.plist;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "NuBacon-iOSRunner-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+					"-ObjC",
+					"-all_load",
+				);
+				PREBINDING = NO;
 				PRODUCT_NAME = "NuBacon-iOSRunner";
-				VALIDATE_PRODUCT = YES;
+				SDKROOT = iphoneos;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -849,11 +797,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "NuBacon-iOSRunner" */ = {
+		518A90CD132908A2000DA4DE /* Build configuration list for PBXNativeTarget "NuBacon-iOSRunner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1D6058940D05DD3E006BFB54 /* Debug */,
-				1D6058950D05DD3E006BFB54 /* Release */,
+				518A90CB132908A2000DA4DE /* Debug */,
+				518A90CC132908A2000DA4DE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
