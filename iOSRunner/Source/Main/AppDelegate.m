@@ -20,20 +20,20 @@
   NSString *baconSource = [NSString stringWithContentsOfFile:baconPath encoding:NSUTF8StringEncoding error:nil];
   [parser parseEval:baconSource];
 
-  // Now load the specs, which are files like: FooSpec.nu
+  // Now load the specs, which are files like: FooSpec.nu or foo_spec.nu
   NSArray *files = [[NSBundle mainBundle] pathsForResourcesOfType:@"nu" inDirectory:nil];
   //NSLog([files description]);
   [files enumerateObjectsUsingBlock:^(id path, NSUInteger idx, BOOL *stop) {
     BOOL loadSpec = NO;
-    if ([path hasSuffix:@"IPadSpec.nu"]) {
+    if ([path hasSuffix:@"IPadSpec.nu"] || [path hasSuffix:@"_ipad_spec.nu"]) {
       if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         loadSpec = YES;
       }
-    } else if ([path hasSuffix:@"IPhoneSpec.nu"]) {
+    } else if ([path hasSuffix:@"IPhoneSpec.nu"] || [path hasSuffix:@"_iphone_spec.nu"]) {
       if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         loadSpec = YES;
       }
-    } else if ([path hasSuffix:@"Spec.nu"]) {
+    } else if ([path hasSuffix:@"Spec.nu"] || [path hasSuffix:@"_spec.nu"]) {
       loadSpec = YES;
     }
     if (loadSpec) {
@@ -42,13 +42,7 @@
     }
   }];
 
-  //fprintf(stderr, "LOGGING TO STDERR!\n");
-
-  // And report the results
-  //[parser parseEval:@"($BaconSummary print)"];
   [parser parseEval:@"((Bacon sharedInstance) run)"];
-
-  //exit(0);
 }
 
 @end

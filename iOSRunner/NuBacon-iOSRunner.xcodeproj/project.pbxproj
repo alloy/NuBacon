@@ -423,7 +423,7 @@
 			isa = PBXGroup;
 			children = (
 				5169DBDC12917DE4002517BD /* Spec */,
-				5169DBCF12917D58002517BD /* NuSource */,
+				5169DBCF12917D58002517BD /* NuBacon */,
 				22E7304411AB5E210014052A /* Source */,
 				22C003A211AB604B009E6408 /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -451,23 +451,23 @@
 			name = util;
 			sourceTree = "<group>";
 		};
-		5169DBCF12917D58002517BD /* NuSource */ = {
+		5169DBCF12917D58002517BD /* NuBacon */ = {
 			isa = PBXGroup;
 			children = (
 				5169DBD812917DD2002517BD /* bacon.nu */,
 				518A910113290CBC000DA4DE /* bacon_context.nu */,
 				518A910213290CBC000DA4DE /* bacon_macros.nu */,
 				518A910313290CBC000DA4DE /* bacon_should.nu */,
-				518A910413290CBC000DA4DE /* bacon_spec.nu */,
 				518A910513290CBC000DA4DE /* bacon_specification.nu */,
 				518A910613290CBC000DA4DE /* bacon_summary.nu */,
 			);
-			name = NuSource;
+			name = NuBacon;
 			sourceTree = "<group>";
 		};
 		5169DBDC12917DE4002517BD /* Spec */ = {
 			isa = PBXGroup;
 			children = (
+				518A910413290CBC000DA4DE /* bacon_spec.nu */,
 			);
 			name = Spec;
 			sourceTree = "<group>";
