@@ -11,8 +11,8 @@ extension for Objective-C. It is being developed while using in our iOS
 application, more on that will be announced.
 
 
-Installation
-------------
+Installation for command-line usage and OS X Xcode projects
+-----------------------------------------------------------
 
 There's currently no Nu specific package manager, so you will have to
 grab the source directly:
@@ -30,6 +30,27 @@ Or as a git clone:
 
 Or checkout master if you’re feeling adventurous. The runloop code,
 for instance, is not yet available in a release.
+
+
+Installation for iOS Xcode projects
+-----------------------------------
+
+* Follow the steps above to obtain the NuBacon source.
+* Add NuBacon/iOSRunner/NuBacon-iOSRunner.xcodeproj to your project.
+* Create a new application target, which will be the spec runner.
+  Hereafter referred to as ‘the app’.
+* In the General info window add NuBaconLib to ‘Direct Dependencies’.
+* In the Build info window add to ‘Other Linker Flags’: -ObjC -all_load
+  (Otherwise it will not be able to find the AppDelegate class.)
+* Make the app link against liNuBaconLib.a
+* Remove NSMainNibFile from the app’s Info.plist.
+* Add the NuBacon sources to the runner app’s resources by opening
+  NuBacon/iOSRunner/NuBacon-iOSRunner.xcodeproj and dragging the
+  ‘NuBacon’ group to your project.
+* Finally, add all the app's sources to the runner app (.h/.m)
+  At least be sure that there’s something to compile, or the app won't
+  run on the simulator. A SpecHelper.m file will always come in handy.
+
 
 Whirl-wind tour
 ---------------
